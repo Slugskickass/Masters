@@ -33,17 +33,36 @@ def repetitions(reps, array_length):        # iterates the timer function.
     return array_length, mean, std
 
 
-# Final arrays by array size,
-array10 = repetitions(10, 10)
-array100 = repetitions(10, 100)
-array1000 = repetitions(10, 1000)
-array10000 = repetitions(10, 10000)
+# !!!!!!!Method 1!!!!!!!
+def power_builder(reps, power_of_10):
+    final_array= []
+    reps = reps
+    x = power_of_10
+    for i in range (1, x+1):
+        array_length = 10 ** i
+        print("Currently on array length:" + str(array_length))
+        final_array.append(repetitions(reps, array_length))
+    final_array = np.reshape(final_array, (-1, 3)).T
+    return final_array
 
-# Final output array containing the information from each array combined.
-output = array10 + array100 + array1000 + array10000        # a 1D array with all the variables.
-final_array = np.reshape(output, (-1, 3)).T                   # transposed and reshaped to produce a better visual array.
+final_array = power_builder(100, 3)
+# !!!!!!!Method 1!!!!!!!
+
+
+# #!!!!!!!Method 2!!!!!!!!
+# # Final arrays by array size,
+# array10 = repetitions(10, 10)
+# array100 = repetitions(10, 100)
+# array1000 = repetitions(10, 1000)
+# array10000 = repetitions(10, 10000)
+#
+# # Final output array containing the information from each array combined.
+# output = array10 + array100 + array1000 + array10000        # a 1D array with all the variables.
+# final_array = np.reshape(output, (-1, 3)).T      # transposed and reshaped to produce a better visual array.
+# #!!!!!!!Method 2!!!!!!!!
+
 
 plt.plot(final_array[0], final_array[1])
 plt.xscale('log')
-plt.yscale('log')
+# plt.yscale('log')
 plt.show()

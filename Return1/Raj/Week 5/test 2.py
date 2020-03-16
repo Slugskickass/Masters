@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import Samurai as sam
 
-positions = pd.read_csv("/Users/RajSeehra/University/Masters/Semester 2/Teaching_python-master/Images/Positions.csv")
+positions = pd.read_csv("/Images/Positions.csv")
 
 #1. scatter plot of the data.
 #plt.scatter(positions['x [nm]'],positions['y [nm]'])
