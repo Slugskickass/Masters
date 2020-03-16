@@ -21,3 +21,7 @@ for i in range (0, len(directory)):
 min_value_location = means.index(min(means))
 print("The file with the lowest average intensity is: " + directory[min_value_location])
 print("With an average intensity of: " + str(min(means)))
+
+max_value_location = means.index(max(means))
+print("The file with the greatest average intensity is: " + directory[max_value_location])
+print("With an average intensity of: " + str(max(means)))
