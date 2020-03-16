@@ -1,4 +1,4 @@
-import Samurai as sam
+import PTC_Samurai as sam
 import numpy as np
 import sys
 
