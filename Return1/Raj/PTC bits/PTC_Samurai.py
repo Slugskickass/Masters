@@ -1,10 +1,6 @@
 from PIL import Image
 import numpy as np
-from skimage.morphology import closing, square
-from skimage.filters import threshold_otsu
-import matplotlib.pyplot as plt
-from skimage.measure import label, regionprops, regionprops_table
-import pandas as pd
+
 import os
 
 
@@ -42,36 +38,6 @@ def pixel_cutter(file_name, x_position, y_position, window_size_x, window_size_y
 # print(np.shape(x))
 # plt.imshow(x)
 # plt.show()
-
-def areas_n_centroids(file_name):
-    data = np.load(file_name)
-
-    # Threshold the data.
-    thresh = threshold_otsu(data)
-    bw = closing(data > thresh)
-
-    # label the image
-    label_image = label(bw, 8)
-    properties = ['area', 'centroid']
-
-    # Calculate the area
-    regions = regionprops_table(label_image, properties=properties)
-
-    # made a panda table
-    datax = pd.DataFrame(regions)
-    areas = np.asarray(datax['area'])
-
-    x = np.asarray(datax['centroid-0'])
-    y = np.asarray(datax['centroid-1'])
-
-    full = np.zeros((len(areas),3))
-
-    for i in range(0, len(areas)):
-        full[i,0] = areas[i]
-        full[i,1] = x[i]
-        full[i,2] = y[i]
-
-    return full
 
 
 def Gaussian_Map(image_size, offset, centre_x, centre_y, width, amplitude):
