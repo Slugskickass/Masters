@@ -3,7 +3,6 @@ import PTC_Samurai as sam
 import sys
 
 darktiff = sys.argv[1]
-
 file = sam.loadtiffs(darktiff)
 
 

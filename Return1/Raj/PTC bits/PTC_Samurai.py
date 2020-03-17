@@ -77,7 +77,7 @@ def loadtiffs(file_name):
     #print('The Image is', img.size, 'Pixels.')
     #print('With', img.n_frames, 'frames.')
 
-    imgArray = np.zeros((img.size[1], img.size[0], img.n_frames), np.uint16)
+    imgArray = np.zeros((img.size[1], img.size[0], img.n_frames), np.float32)
     for I in range(img.n_frames):
         img.seek(I)
         imgArray[:, :, I] = np.asarray(img)
