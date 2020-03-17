@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import PTC_Samurai as sam
 import sys
 
