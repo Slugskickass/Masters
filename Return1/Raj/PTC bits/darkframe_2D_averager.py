@@ -4,15 +4,11 @@ import PTC_Samurai as sam
 
 file = sam.loadtiffs("/Users/RajSeehra/University/Masters/Semester 2/Teaching_python-master/Week 2/Data/640.tif")
 
-array = np.zeros((np.shape(file)[0], np.shape(file)[1]))
+def axisaverager(file):
+    array = np.mean(file, 2)
 
-for i in range(0, np.shape(file)[2]):
-    array = array + file[:,:,i]
+    return array
 
-array = array/(np.shape(file)[2])
+array = axisaverager(file)
 
-plt.imshow(array)
-plt.show()
-
-
-#sam.savetiffs("darkframes.tif", array)
+# sam.savetiffs("darkframes.npy", array)
