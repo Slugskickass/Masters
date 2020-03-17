@@ -31,11 +31,9 @@ def load_img (file_name):
     return img_array
 
 #define a function to save an image or stack
-def save_img(file_name, data):
-    images = []
-    for I in range(np.shape(data)[2]):
-        images.append(im.fromarray(data[:, :, I]))
-        images[0].save(file_name, save_all=True, append_images=images[1:])
+def save_img_2d(file_name, data):
+    images = im.fromarray(data[:, :])
+    images.save(file_name)
 
     
 #define a function to cut out a given region of a single frame of an image
