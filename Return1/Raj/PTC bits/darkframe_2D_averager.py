@@ -1,8 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import PTC_Samurai as sam
+import sys
 
-file = sam.loadtiffs("/Users/RajSeehra/University/Masters/Semester 2/Teaching_python-master/Week 2/Data/640.tif")
+darktiff = sys.argv[1]
+
+file = sam.loadtiffs(darktiff)
 
 
 def axisaverager(file):
@@ -13,4 +16,4 @@ def axisaverager(file):
 array = axisaverager(file)
 
 
-# sam.savetiffs("darkframes.npy", array)
+sam.savetiffs("darkframes.npy", array)
