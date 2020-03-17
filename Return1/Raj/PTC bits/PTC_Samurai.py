@@ -57,7 +57,7 @@ def get_file_list(dir):
     return file_list
 
 # single frame
-def savetiffs(file_name, data):
+def savetiff(file_name, data):
     images = Image.fromarray(data[:, :])
     images.save(file_name)
 
