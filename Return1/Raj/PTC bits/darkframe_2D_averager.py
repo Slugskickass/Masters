@@ -15,4 +15,4 @@ def axisaverager(file):
 array = axisaverager(file)
 
 
-sam.savetiff("darkframes.npy", array)
+np.save("darkframes.npy", array)
