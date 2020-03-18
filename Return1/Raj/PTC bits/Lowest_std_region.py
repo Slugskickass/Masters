@@ -6,7 +6,7 @@ import sys
 # Once you have determined your brightest file from your batch, run the program with that as the input file.
 
 file = sys.argv[1]
-step = sys.argv[2]
+step = int(sys.argv[2])
 
 def lowest_std_region(step, file):
     array = sam.loadtiffs(file)
