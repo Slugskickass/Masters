@@ -1,7 +1,7 @@
 import numpy as np
 import im_func_lib as funci
 
-input_data = '/Users/mattarnold/iCloud Drive (Archive)/Documents/Documents – Matt’s MacBook Pro/Uni/Imaging Msc/semester 2/Python Module/PTC'#sys.argv[1]
+input_data = '/Users/mattarnold/Masters/Return1/Matt/PTC'#sys.argv[1]
 files = funci.get_file_list(input_data) 
 
 file_list = files
@@ -16,7 +16,6 @@ crop_bbox = np.load('crop_box.npy')
 y_low, y_high, x_low, x_high = crop_bbox[0,0],crop_bbox[0,1],crop_bbox[1,0],crop_bbox[1,1]
 for I in range(num_files):
     work_img = funci.load_img(files[I])
-    work_img.astype('float64')
     for J in range(np.size(work_img,2)):
         work_img[:,:,J] = np.subtract(work_img[:,:,J],dark_frame)
     crop_image = work_img [y_low : y_high, x_low : x_high,:]
