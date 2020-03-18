@@ -33,7 +33,7 @@ def ptc_crop(file_list):
     data_table = np.zeros((num_files,2)) # Build an array for results
     
     crop_bbox = np.load('crop_box.npy') # Load the array containing bounding box dimensions ([[x-lo,x-hi][y-lo,y-hi]])
-    y_low, y_high, x_low, x_high = crop_bbox[0,0],crop_bbox[0,1],crop_bbox[1,0],crop_bbox[1,1]
+    y_low, y_high, x_low, x_high = crop_bbox[1,0],crop_bbox[1,1],crop_bbox[0,0],crop_bbox[0,1]
     
     for I in range(num_files): # Iterate through files 
         work_img = funci.load_img(files[I]) # Load each
