@@ -14,14 +14,16 @@ from skimage.measure import label, regionprops, regionprops_table
 import pandas as pd
 from scipy import signal
 from matplotlib.colors import LogNorm
+import os
 
 
 #define a function to load an image
-def load_img (file_name):
+def load_img (file_name, dimensions=False):
     img_locat = im.open(file_name)
     
-    print ('Image size (px)',img_locat.size)
-    print ('Number of frames',img_locat.n_frames)
+    if dimensions == True:
+        print ('Image size (px)',img_locat.size)
+        print ('Number of frames',img_locat.n_frames)
     
     img_array = np.zeros ((img_locat.size[1],img_locat.size[0],img_locat.n_frames), np.uint16)
     for I in range(img_locat.n_frames):
@@ -31,9 +33,11 @@ def load_img (file_name):
     return img_array
 
 #define a function to save an image or stack
-def save_img_2d(file_name, data):
-    images = im.fromarray(data[:, :])
-    images.save(file_name)
+def save_img(file_name, data):
+    images = []
+    for I in range(np.shape(data)[2]):
+        images.append(im.fromarray(data[:, :, I]))
+        images[0].save(file_name, save_all=True, append_images=images[1:])
 
     
 #define a function to cut out a given region of a single frame of an image
@@ -79,11 +83,14 @@ def fft_stack_show (data):
          plt.imshow(np.abs(data[:,:,I]), norm=LogNorm(vmin=5))
          plt.show ()
          
-def otsu_thresh (data):    
-    thresh = threshold_otsu(data)
-    thresh_img = closing (data > thresh)
-    thresh_img = thresh_img.astype(np.uint8)
-    return thresh_img
+def get_file_list(dir,file_type=".tif"):
+    file_list = []
+    for file in os.listdir(dir):
+        if file.endswith(file_type):
+            file_name = dir + '/' + file
+            file_list.append(file_name)
+    return file_list
+
 
 
 
