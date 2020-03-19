@@ -2,16 +2,17 @@ import numpy as np
 import PTC_Samurai as sam
 import matplotlib.pyplot as plt
 
-# drkframe = sys.argv[1]
-# folder = sys.argv[2]
+drkframe = sys.argv[1]
+folder = sys.argv[2]
 
-# darkframes = np.load(drkframe)
-darkframes = np.load("/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/Return1/Raj/PTC bits/darkframes.npy")
+darkframes = np.load(drkframe)
+# darkframes = np.load("/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/Return1/Raj/PTC bits/darkframes.npy")
 
-# directory = sam.get_file_list(folder)
-directory = sam.get_file_list("/Users/RajSeehra/University/Masters/Semester 2/test folder")
+directory = sam.get_file_list(folder)
+# directory = sam.get_file_list("/Users/RajSeehra/University/Masters/Semester 2/test folder")
 
 # This file is generated using the Lowest_std_region.py on your brightest file.
+crop_box = np.load("crop_box.npy")
 crop_box = np.load("/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/Return1/Raj/PTC bits/crop_box.npy")
 
 
