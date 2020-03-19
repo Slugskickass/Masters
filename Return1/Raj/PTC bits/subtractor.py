@@ -14,7 +14,7 @@ directory = sam.get_file_list(folder)
 
 # This file is generated using the Lowest_std_region.py on your brightest file.
 crop_box = np.load("crop_box.npy")
-crop_box = np.load("/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/Return1/Raj/PTC bits/crop_box.npy")
+# crop_box = np.load("/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/Return1/Raj/PTC bits/crop_box.npy")
 
 
 def ptc_data(directory, darkframes, crop_box):
