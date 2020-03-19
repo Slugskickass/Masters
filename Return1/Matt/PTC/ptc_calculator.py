@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 import os
-import im_func_lib as funci
+import im_func_simp as funci
 import sys
 
 # Defining a function to background correct and then crop areas from images used in a PTC plot. The means and standard
