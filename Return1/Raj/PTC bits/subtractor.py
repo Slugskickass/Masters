@@ -19,10 +19,10 @@ crop_box = np.load("crop_box.npy")
 
 def ptc_data(directory, darkframes, crop_box):
     mean_std = []      # empty list which will collect the data in order: mean, std we want
-    x1 = crop_box[0,0]
-    x2 = crop_box[0,1]
-    y1 = crop_box[1,0]
-    y2 = crop_box[1,1]
+    x1 = int(crop_box[0,0])
+    x2 = int(crop_box[0,1])
+    y1 = int(crop_box[1,0])
+    y2 = int(crop_box[1,1])
 
     for i in range (0, len(directory)):
         array = sam.loadtiffs(directory[i])
