@@ -18,8 +18,8 @@ crop_box = np.load("crop_box.npy")
 
 
 def ptc_data(directory, darkframes, crop_box):
-    mean_values = np.zeros((100, 100, 2*len(directory)))      # empty list which will collect the data in order: mean, std we want
-    std_values = np.zeros((100, 100, 2*len(directory)))
+    mean_values = np.zeros((100, 100, len(directory)))      # empty list which will collect the data in order: mean, std we want
+    std_values = np.zeros((100, 100, len(directory)))
     x1 = int(crop_box[0,0])
     x2 = int(crop_box[0,1])
     y1 = int(crop_box[1,0])
