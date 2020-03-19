@@ -28,7 +28,7 @@ def ptc_data(directory, darkframes, crop_box):
         array = sam.loadtiffs(directory[i])
         for z in range (0, array.shape[2]):
             array[:, :, z] = np.subtract(array[:, :, z], darkframes)
-        array = array[x1:x2, y1:y2, :]              # crop the stack to the stable window.
+        array = array[y1:y2, x1:x2, :]              # crop the stack to the stable window.
         mean_std.append(np.mean(array)) # mean for the file
         mean_std.append(np.std(array))  # std for the file
 
