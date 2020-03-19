@@ -18,7 +18,8 @@ crop_box = np.load("crop_box.npy")
 
 
 def ptc_data(directory, darkframes, crop_box):
-    mean_std = []      # empty list which will collect the data in order: mean, std we want
+    mean_values = np.zeros((100, 100, 2*len(directory)))      # empty list which will collect the data in order: mean, std we want
+    std_values = np.zeros((100, 100, 2*len(directory)))
     x1 = int(crop_box[0,0])
     x2 = int(crop_box[0,1])
     y1 = int(crop_box[1,0])
@@ -29,14 +30,13 @@ def ptc_data(directory, darkframes, crop_box):
         for z in range (0, array.shape[2]):
             array[:, :, z] = array[:, :, z] - darkframes
         array = array[x1:x2, y1:y2, :]              # crop the stack to the stable window.
-        mean_std.append(np.mean(array,2)) # mean for the file
-        mean_std.append(np.std(array,2))  # std for the file
+        mean_values[:,:,i] = np.mean(array,2) # mean for the file
+        std_values[:,:,i] = np.std(array,2)  # std for the file
 
-    mean_std = np.reshape(mean_std, (-1, 2)).T      # 0 = mean, 1 = std.
-
-    return mean_std
+    return mean_values, std_values
 
 
-data = ptc_data(directory, darkframes, crop_box)
+mean_data, std_data = ptc_data(directory, darkframes, crop_box)
 
-np.save("PTCdata.npy", data)
+np.save("mean_Pixel_PTCdata.npy", mean_data)
+np.save("std_Pixel_PTCdata.npy", std_data)
