@@ -30,8 +30,8 @@ def ptc_data(directory, darkframes, crop_box):
         for z in range (0, array.shape[2]):
             array[:, :, z] = array[:, :, z] - darkframes
         array = array[x1:x2, y1:y2, :]              # crop the stack to the stable window.
-        mean_values[:,:,i] = np.mean(array,2) # mean for the file
-        std_values[:,:,i] = np.std(array,2)  # std for the file
+        mean_values[:,:,i] = np.mean(array, 2) # mean for the file
+        std_values[:,:,i] = np.std(array, 2)  # std for the file
 
     return mean_values, std_values
 
