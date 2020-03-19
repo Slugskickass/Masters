@@ -1,6 +1,7 @@
 import numpy as np
 import PTC_Samurai as sam
 import matplotlib.pyplot as plt
+import sys
 
 drkframe = sys.argv[1]
 folder = sys.argv[2]
