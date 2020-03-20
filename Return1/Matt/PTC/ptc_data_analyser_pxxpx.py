@@ -29,8 +29,12 @@ for J in range(np.size(data,1)): # Scan through pixels in y...
         slope, intercept, r_value, p_value, std_err = stats.linregress(mean[J,K,:], sqd_std[J,K,:]) # calculate gain
         results[J,K] = slope # Save gain for each pixel in results array
 
-plt.hist(results) # Plot
+new_results = np.reshape(results,np.size(results))
+
+plt.hist(new_results,bins = np.linspace(0,3, 100)) # Plot
 plt.xlabel("Pixel gain / electrons per count")
 plt.ylabel("Frequency")
 plt.title("Hamamatsu Orca Flash4: Pixel by pixel gain")
+plt.show
+
 plt.savefig("flash4_pxxpx_gain.png") # Save

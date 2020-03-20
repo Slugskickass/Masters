@@ -30,7 +30,7 @@ print (slope)
 mean_std_array = mean_std_array[:,:] * slope # Correct for gain
 
 
-plt.plot(mean_std_array[3:,0],sqd_std[3:],"o") # Plot
+plt.plot(mean_std_array[:,0],sqd_std[:],"o") # Plot
 plt.xscale("symlog")
 #plt.yscale("log")
 plt.ylabel("Standard deviation electron counts")
