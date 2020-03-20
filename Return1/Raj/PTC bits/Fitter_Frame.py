@@ -30,10 +30,10 @@ for x_pos in range(0, mean_data.shape[1]):
 
 slope_intercept = np.reshape(slope_intercept, (-1, 2)).T
 
-plt.scatter(slope_intercept[0], slope_intercept[1])
-plt.xlabel("Slope")
-plt.ylabel("Intercept")
-plt.title("Slope vs Intercept for all pixels (cut out mean <10 or >1000)")
+plt.hist(slope_intercept[0])
+plt.xlabel("Gradient")
+plt.ylabel("Number of Pixels")
+plt.title("Histogram of the gradient(gain) distribution \n for each pixel (cut out mean <10 or >1000)")
 
 plt.show()
 
