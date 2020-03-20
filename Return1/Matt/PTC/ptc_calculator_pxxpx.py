@@ -30,10 +30,11 @@ def ptc_crop(file_list):
     dark_frame = np.load('dark_frame.npy') #Import previously calculated dark frame from directory
     
     num_files = len(file_list) # Determine number of files in folder
-    data_table = np.zeros((num_files,2)) # Build an array for results
     
     crop_bbox = np.load('crop_box.npy') # Load the array containing bounding box dimensions ([[x-lo,x-hi][y-lo,y-hi]])
     y_low, y_high, x_low, x_high = crop_bbox[1,0],crop_bbox[1,1],crop_bbox[0,0],crop_bbox[0,1]
+    
+    data_table = np.zeros(((y_high-y_low),(x_high-x_low),2,num_files)) # Build an array for results
     
     for I in range(num_files): # Iterate through files 
         work_img = funci.load_img(files[I]) # Load each
@@ -42,8 +43,8 @@ def ptc_crop(file_list):
         crop_image = work_img [y_low : y_high, x_low : x_high,:] # Crop each image to the desired dimensions
         
         
-        data_table[I,0] = np.mean(crop_image) # Average the image and save the mean to column 0
-        data_table[I,1] = np.std(crop_image) # Find the stdev of the image and save it to column 1
-    return np.save('mean_std_data',data_table) # Output the data, saved in a 2D numpy array 
+        data_table[:,:,0,I] = np.mean(crop_image,2) # Average the image and save the mean to column 0
+        data_table[:,:,1,I] = np.std(crop_image,2) # Find the stdev of the image and save it to column 1
+    return np.save('mean_std_data_pxxpx',data_table) # Output the data, saved in a 2D numpy array 
     
 test = ptc_crop(files) # Run

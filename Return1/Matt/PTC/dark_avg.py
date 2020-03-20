@@ -7,10 +7,7 @@ Created on Mon Mar 16 12:32:08 2020
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
-from PIL import Image
-import os
-import im_func_lib as funci
+import im_func_simp as funci
 import sys
 
 # Define a function to output a 2D averaged dark frame for background subtraction from other data in PTC calculation.
@@ -27,7 +24,6 @@ def dark_frame_avg(dir_loc):
     file_int_avgs = np.zeros(len(files)) #Build an empty array to store average intensities in for comparison
     for I in range (len(files)):
         work_file = funci.load_img(files[I]) #Iterate through list, loading each using a function from im_func_lib
-        work_file.astype('float64') #Convert array data to floats for processing
         avg_int = np.mean(work_file) #Find the mean of the loaded file
         file_int_avgs[I] = avg_int #Add the mean to the processing array 
     
@@ -35,7 +31,6 @@ def dark_frame_avg(dir_loc):
     int_res = np.abs(result) #Convert this output into a useful format
     dark_num = int_res[0,0]
     dark_frame = funci.load_img(files[dark_num]) #Load the darkest frame found above
-    dark_frame.astype('float64') #Convert array data to floats for processing
     avg_dark_frame = np.mean(dark_frame,2) #Average the frame in the z/time axis
     return np.save('dark_frame',avg_dark_frame) #Return the averaged frame, saved as a numpy array
     
