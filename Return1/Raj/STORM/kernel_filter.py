@@ -7,10 +7,9 @@ array = sam.loadtiffs("/Users/RajSeehra/University/Masters/Semester 2/Teaching_p
 
 def kernel_filter(data, matrix):
     image = data
-    processed_image = np.zeros((data.shape[0], data.shape[1]))
     kernel = np.asarray(matrix)
     if sum(sum(kernel)) != 1:       # Quick check to ensure the kernel matrix is within parameters.
-        print("Error, this matrix contains a value not equal to 1. This can change the final image.")
+        print("Error, this matrix's summation value is not equal to 1. This can change the final image.")
 
     edge_cover = (kernel.shape[0] - 1) // 2
 
@@ -30,6 +29,7 @@ def kernel_filter(data, matrix):
             processed_image[y,x] = k
     processed_image = processed_image[edge_cover:processed_image.shape[0]-edge_cover, edge_cover:processed_image.shape[1]-edge_cover]
     return(processed_image)
+
 
 matrix = np.asarray([(-1, 0, -1), (0, 5, 0), (-1, 0, -1)])
 
