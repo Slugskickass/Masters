@@ -30,8 +30,10 @@ for x_pos in range(0, mean_data.shape[1]):
 
 slope_intercept = np.reshape(slope_intercept, (-1, 2)).T
 
-plt.hist(slope_intercept[0])
-plt.xlabel("Gradient")
+binner = np.linspace(0,3, 100)
+
+plt.hist(slope_intercept[1], bins = binner)
+plt.xlabel("Read Noise")
 plt.ylabel("Number of Pixels")
 plt.title("Histogram of the gradient(gain) distribution \n for each pixel (cut out mean <10 or >1000)")
 
