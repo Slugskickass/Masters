@@ -33,6 +33,7 @@ def kernel_filter(data, matrix):
             kernel_region = bordered_image[y-edge_cover_v:y+edge_cover_v+1, x-edge_cover_h:x+edge_cover_h+1]
             k = (kernel * kernel_region).sum()
             processed_image[y,x] = k
+    # Cuts out the image to be akin to the original image size.
     processed_image = processed_image[edge_cover_v:processed_image.shape[0]-edge_cover_v, edge_cover_h:processed_image.shape[1]-edge_cover_h]
     return (processed_image)
 
