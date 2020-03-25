@@ -29,8 +29,8 @@ def gauss_height (width): #This should calculate the amplitude of the Gaussian b
 def build_2d_gauss (width, height): #This builds the Gaussian based on the calculated parameters
     xo = yo = 50 
     kernel = np.zeros((100,100)) #PICKED SIZE ARBITRARILY... IS THIS THE RIGHT NUMBER?
-    for x in range(width):
-        for y in range(width):
+    for x in range(np.size(kernel)):
+        for y in range(np.size(kernel)):
             kernel[x, y] = height * np.exp(-1 * (((x-xo)**2 + (y-yo)**2)/width**2))
     return kernel
 
@@ -39,20 +39,27 @@ def diff_of_gauss (data, narrow_width, wide_width):
     height_wide = gauss_height(wide_width)
     narrow_kern = build_2d_gauss (narrow_width, height_narrow) #Build Gaussians
     wide_kern = build_2d_gauss (wide_width, height_wide)
-    blur_matrix = narrow_kern - wide_kern #Find DOG
+    
     if data.ndim > 2: #if multiple frames in image then:
-        diff_gauss_img = np.zeros_like(data)
+        gauss_img_small = np.zeros_like(data)
+        gauss_img_big = np.zeros_like(data)
         for I in range(np.size(data,2)):
-            diff_gauss_img[:,:,I] = signal.convolve2d(data[:,:,I],blur_matrix,mode='same',boundary='symm')
+            gauss_img_small[:,:,I] = signal.convolve2d(data[:,:,I], narrow_kern,mode='same',boundary='symm') #convolve DOG with image
+            gauss_img_big[:,:,I] = signal.convolve2d(data[:,:,I], wide_kern, mode='same', boundary='symm')  # convolve DOG with image
+        diff_gauss_img = gauss_img_small - gauss_img_big #convolve DOG with image
+    
     else:
-        diff_gauss_img = signal.convolve2d(data,blur_matrix,mode='same',boundary='symm') #convolve DOG with image
+        gauss_img_small = signal.convolve2d(data, narrow_kern,mode='same',boundary='symm') #convolve DOG with image
+        gauss_img_big = signal.convolve2d(data, wide_kern, mode='same', boundary='symm')  # convolve DOG with image
+        diff_gauss_img = gauss_img_small - gauss_img_big #convolve DOG with image
+    
     return diff_gauss_img
 
 data = load_img('/Users/mattarnold/Masters/Return1/Matt/STORM/cameraman.tif')
 
 
-wide = 40
-narrow = 5
+wide = 50
+narrow = 1
 
 DOG = diff_of_gauss(data,narrow,wide)
 
