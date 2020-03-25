@@ -10,7 +10,7 @@ def kernel_filter(data, matrix):
     kernel = np.asarray(matrix)
 
     # Error check in case the matrix has an even number of sides.
-    if kernel.shape[0]%2 == 0 or kernel.shape[1] % 2 == 0:
+    if kernel.shape[0] % 2 == 0 or kernel.shape[1] % 2 == 0:
         print("The matrix has an even number of rows and/or columns. Please make them odd and run again.")
 
     if sum(sum(kernel)) != 1:       # Quick check to ensure the kernel matrix is within parameters.
@@ -25,7 +25,6 @@ def kernel_filter(data, matrix):
     edge_cover_h = (kernel.shape[1] - 1) // 2
 
     # adds an edge to allow pixels at the border to be filtered too.
-    # ??? should i change the zeros to replicate the edge pixels?
     bordered_image = np.zeros((data.shape[0]+2*edge_cover_v, data.shape[1]+2*edge_cover_h))
     # makes the central pixels the ones from the image, leaving surrounding as zeroes.
     bordered_image[edge_cover_v:bordered_image.shape[0]-edge_cover_v, edge_cover_h: bordered_image.shape[1]-edge_cover_h] = image

@@ -10,7 +10,7 @@ def kernel_filter(data, matrix):
     kernel = np.asarray(matrix)
 
     # Error check in case the matrix has an even number of sides.
-    if kernel.shape[0]%2 == 0 or kernel.shape[1] % 2 == 0:
+    if kernel.shape[0] % 2 == 0 or kernel.shape[1] % 2 == 0:
         print("The matrix has an even number of rows and/or columns. Please make them odd and run again.")
 
     if sum(sum(kernel)) != 1:       # Quick check to ensure the kernel matrix is within parameters.
