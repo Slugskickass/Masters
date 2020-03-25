@@ -22,16 +22,16 @@ def load_img (file_name):
         img_array = np.asarray(img_locat)
     return img_array
 
-def gauss_height (width): #This should calculate the amplitude of the Gaussian based on an area under the curve of 1
-    height = 1 / (math.sqrt(2) * np.abs(width) * math.sqrt(math.pi)) 
+def gauss_height(width):  # This should calculate the amplitude of the Gaussian based on an area under the curve of 1
+    height = (1 / (math.sqrt(2) * np.abs(width) * math.sqrt(math.pi)))/(2*(np.sqrt(2)))
     return height
 
-def build_2d_gauss (width, height): #This builds the Gaussian based on the calculated parameters
-    xo = yo = 50 
-    kernel = np.zeros((100,100)) #PICKED SIZE ARBITRARILY... IS THIS THE RIGHT NUMBER?
-    for x in range(np.size(kernel)):
-        for y in range(np.size(kernel)):
-            kernel[x, y] = height * np.exp(-1 * (((x-xo)**2 + (y-yo)**2)/width**2))
+def build_2d_gauss(width, height):  # This builds the Gaussian based on the calculated parameters
+    xo = yo = 25
+    kernel = np.zeros((50, 50))  # PICKED SIZE ARBITRARILY... IS THIS THE RIGHT NUMBER?
+    for x in range(np.shape(kernel)[0]):
+        for y in range(np.shape(kernel)[1]):
+            kernel[x, y] = height * np.exp(-1 * (((x - xo) ** 2 + (y - yo) ** 2) / width ** 2))
     return kernel
 
 def diff_of_gauss (data, narrow_width, wide_width):
@@ -58,7 +58,7 @@ def diff_of_gauss (data, narrow_width, wide_width):
 data = load_img('/Users/mattarnold/Masters/Return1/Matt/STORM/cameraman.tif')
 
 
-wide = 50
+wide = 20
 narrow = 1
 
 DOG = diff_of_gauss(data,narrow,wide)
