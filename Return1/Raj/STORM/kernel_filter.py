@@ -35,7 +35,7 @@ def kernel_filter(data, matrix):
             processed_image[y,x] = k
     # Cuts out the image to be akin to the original image size.
     processed_image = processed_image[edge_cover_v:processed_image.shape[0]-edge_cover_v, edge_cover_h:processed_image.shape[1]-edge_cover_h]
-    return (processed_image)
+    return processed_image
 
 
 matrix = np.asarray([(1, 5, 1), (5, 25, 5), (1, 5, 1)])
