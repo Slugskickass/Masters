@@ -8,8 +8,11 @@ array = sam.loadtiffs("/Users/RajSeehra/University/Masters/Semester 2/Teaching_p
 def kernel_filter(data, matrix):
     image = data
     kernel = np.asarray(matrix)
+
+    # Error check in case the matrix has an even number of sides.
     if kernel.shape[0]%2 == 0 or kernel.shape[1] % 2 == 0:
         print("The matrix has an even number of rows and/or columns. Please make them odd and run again.")
+
     if sum(sum(kernel)) != 1:       # Quick check to ensure the kernel matrix is within parameters.
         print("Error, this matrix's summation value is not equal to 1. This can change the final image.")
         print("The program has divided the matrix by the sum total to return it to a value of 1.")
