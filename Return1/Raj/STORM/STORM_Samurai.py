@@ -61,6 +61,7 @@ def savetiff(file_name, data):
     images = Image.fromarray(data[:, :])
     images.save(file_name)
 
+
 # single frame
 def image_open(file):
     # open the file
@@ -70,6 +71,7 @@ def image_open(file):
     imgArray = np.zeros((img.size[1], img.size[0], img.n_frames), np.uint16)
     imgArray[:, :, 0] = img
     img.close()
+
 
 # multi stack tiffs
 def loadtiffs(file_name):
@@ -84,9 +86,19 @@ def loadtiffs(file_name):
     img.close()
     return (imgArray)
 
+
 # as above
 def savetiffs(file_name, data):
     images = []
     for I in range(np.shape(data)[2]):
         images.append(Image.fromarray(data[:, :, I]))
         images[0].save(file_name, save_all=True, append_images=images[1:])
+
+
+def filter_switcher(data, settings):
+    switcher = {
+        'kernel' : kernel_filter(data, settings["filter"]),
+        'DOG' : difference_of_gaussians(),
+    }
+
+    return switcher.get(settings["filter"], data)      # return an error message is no match.
