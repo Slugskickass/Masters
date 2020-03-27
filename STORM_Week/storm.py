@@ -22,7 +22,7 @@ with open("DOG_params.json", "r") as read_file:
 
 file = params['file name:'] # Unpack file name to variable "file"
 filter_params = params['filter parameters:'] # Unpack parameters
-filter_type = filter_params["filter type:"]
+filter_type = filter_params['filter type:']
 param_a = filter_params['input parameter a'] # save inputted widths as variables
 param_b = filter_params['input parameter b']
 
@@ -36,3 +36,9 @@ if filter_type == "DOG":
     
     # Perform filtering operation
     DOG = filters.diff_of_gauss(data,narrow,wide)
+
+
+# This takes the data and the filter params information and pulls out the relevant information to choose which
+# function to run. Based on the "filter type:", and uses the parameters a and b as required.
+# Matt, at the moment it does not account for your above if statement.
+filtered_data = filters.filter_switcher(file, filter_params)
