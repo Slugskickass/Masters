@@ -2,7 +2,7 @@ import json
 import general as genr
 import filters
 
-###MATT
+### IMPORT SECTION ####
 #json file builder (should be easy to adapt to accept any filter and its inputs as param_a and param_b)
 parameters = {
         "file name:" : "/Users/mattarnold/Masters/Return1/Matt/STORM/cameraman.tif",
@@ -20,6 +20,7 @@ with open("params.json", "w") as write_file:
 with open("DOG_params.json", "r") as read_file:
     params = json.load(read_file)
 
+###UNPACKING### (Might remove)
 file = params['file name:'] # Unpack file name to variable "file"
 filter_params = params['filter parameters:'] # Unpack parameters
 filter_type = filter_params['filter type:']
@@ -37,8 +38,11 @@ if filter_type == "DOG":
     # Perform filtering operation
     DOG = filters.diff_of_gauss(data,narrow,wide)
 
-
+#
+##
+###FILTERING####
 # This takes the data and the filter params information and pulls out the relevant information to choose which
 # function to run. Based on the "filter type:", and uses the parameters a and b as required.
 # Matt, at the moment it does not account for your above if statement.
 filtered_data = filters.filter_switcher(file, filter_params)
+
