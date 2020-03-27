@@ -18,7 +18,7 @@ print(y["filename"])
 # a Python object (dict):
 x = {
   "filename": "/Users/RajSeehra/University/Masters/Semester 2/Teaching_python-master/Week 2/Data/640.tif",
-  "filter": "kernel"
+  "filter": "kernel",
 }
 
 # convert into JSON:

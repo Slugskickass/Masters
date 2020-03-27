@@ -98,7 +98,7 @@ def savetiffs(file_name, data):
 def filter_switcher(data, settings):
     switcher = {
         'kernel' : kernel_filter(data, settings["filter"]),
-        'DOG' : difference_of_gaussians(data, settings("filter")),
+        'DOG' : DOG(data, settings("filter")),
     }
 
-    return switcher.get(settings["filter"], data)      # return an error message is no match.
+    return switcher.get(settings["filter"], data)
