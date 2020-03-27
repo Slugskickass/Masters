@@ -22,7 +22,7 @@ x = {
 }
 
 # convert into JSON:
-# y = json.dumps(x)
+y = json.dumps(x)
 
 # the result is a JSON string:
 print(y)
