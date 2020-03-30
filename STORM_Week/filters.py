@@ -6,11 +6,12 @@ import math
 
 def filter_switcher(data, settings):
     switcher = {
-        'kernel' : kernel_filter(data, settings["input parameter a"]),
-        'DOG' : diff_of_gauss(data, settings("input parameter a"), settings("input parameter b")),
+        'kernel' : kernel_filter(data, (settings.get("filter parameters:", {}).get("input parameter a"))),
+        'DOG' : diff_of_gauss(data, (settings.get("filter parameters:", {}).get("input parameter a")),
+                              (settings.get("filter parameters:", {}).get("input parameter b"))),
     }
 
-    return switcher.get(settings["filter_type:"], data)
+    return switcher.get((settings.get("filter parameters:", {}).get("filter type:")), data)
 
 
 ### DIFFERENCE OF GAUSSIANS

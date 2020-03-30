@@ -24,3 +24,15 @@ def load_img (file_name): # Define function to load image
         img_locat.seek(0)
         img_array = np.asarray(img_locat)
     return img_array
+
+
+def savetiffs(file_name, data):
+    if data.shape[2] > 1:
+        images = []
+        for I in range(np.shape(data)[2]):
+            images.append(im.fromarray(data[:, :, I]))
+            images[0].save(file_name, save_all=True, append_images=images[1:])
+    else:
+        images = im.fromarray(data[:, :])
+        images.save(file_name)
+
