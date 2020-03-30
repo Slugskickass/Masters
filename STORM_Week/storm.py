@@ -9,8 +9,8 @@ parameters = {
         "file name:" : "/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/STORM_Week/640.tif",
         "filter parameters:" : {
                 "filter type:" : "DOG",
-                "input parameter a" : 40,
-                "input parameter b" : 40,
+                "input parameter a" : 20,
+                "input parameter b" : 200,
         }
 }
 
