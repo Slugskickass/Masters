@@ -5,7 +5,7 @@ import filters
 ### IMPORT SECTION ####
 #json file builder (should be easy to adapt to accept any filter and its inputs as param_a and param_b)
 parameters = {
-        "file name:" : "/Users/mattarnold/Masters/Return1/Matt/STORM/cameraman.tif",
+        "file name:" : "STORM_Week/640.tif",
         "filter parameters:" : {
                 "filter type:" : "DOG",
                 "input parameter a" : 40,
@@ -40,14 +40,19 @@ with open("DOG_params.json", "r") as read_file:
 #
 # #
 ##
+
+###LOAD IN THE DATA
+
+file = genr.load_img(params["file name:"])
+
+
 ###FILTERING####
 # This takes the data and the filter params information and pulls out the relevant information to choose which
 # function to run. Based on the "filter type:", and uses the parameters a and b as required.
 # Matt, at the moment it does not account for your above if statement.
-x = params.get("filter parameters:", {}).get("input parameter a")
 
-print(x)
-filtered_data = filters.filter_switcher(params["file name:"], params)
+
+filtered_data = filters.filter_switcher(file, params)
 
 
 
