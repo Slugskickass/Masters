@@ -1,6 +1,7 @@
 import json
 import general as genr
 import filters
+import numpy as np
 
 ### IMPORT SECTION ####
 #json file builder (should be easy to adapt to accept any filter and its inputs as param_a and param_b)
@@ -53,6 +54,8 @@ file = genr.load_img(params["file name:"])
 
 
 filtered_data = filters.filter_switcher(file, params)
+
+np.save('filtered_img')
 
 
 
