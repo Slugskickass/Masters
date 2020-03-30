@@ -6,11 +6,11 @@ import numpy as np
 ### IMPORT SECTION ####
 #json file builder (should be easy to adapt to accept any filter and its inputs as param_a and param_b)
 parameters = {
-        "file name:" : "/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/STORM_Week/640.tif",
+        "file name:" : "/Users/mattarnold/Masters/STORM_Week/00062.tif",
         "filter parameters:" : {
                 "filter type:" : "DOG",
-                "input parameter a" : 20,
-                "input parameter b" : 200,
+                "input parameter a" : 1,
+                "input parameter b" : 25,
         }
 }
 
@@ -18,7 +18,7 @@ with open("params.json", "w") as write_file:
     json.dump(parameters, write_file)
 
 # Import filter parameters from json file
-with open("DOG_params.json", "r") as read_file:
+with open("params.json", "r") as read_file:
     params = json.load(read_file)
 
 ###UNPACKING### (Might remove)
@@ -55,7 +55,8 @@ file = genr.load_img(params["file name:"])
 
 filtered_data = filters.filter_switcher(file, params)
 
-np.save('filtered_img')
+np.save('filtered_img', filtered_data)
+
 
 
 
