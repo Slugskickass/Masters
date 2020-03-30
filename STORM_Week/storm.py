@@ -7,8 +7,8 @@ import filters
 parameters = {
         "file name:" : "/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/STORM_Week/640.tif",
         "filter parameters:" : {
-                "filter type:" : "kernel",
-                "input parameter a" : [(1, 2, 1), (2, 4, 2), (1, 2, 1)],
+                "filter type:" : "DOG",
+                "input parameter a" : 40,
                 "input parameter b" : 40,
         }
 }
