@@ -5,10 +5,10 @@ import filters
 ### IMPORT SECTION ####
 #json file builder (should be easy to adapt to accept any filter and its inputs as param_a and param_b)
 parameters = {
-        "file name:" : "STORM_Week/640.tif",
+        "file name:" : "/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/STORM_Week/640.tif",
         "filter parameters:" : {
-                "filter type:" : "DOG",
-                "input parameter a" : 40,
+                "filter type:" : "kernel",
+                "input parameter a" : [(1, 2, 1), (2, 4, 2), (1, 2, 1)],
                 "input parameter b" : 40,
         }
 }

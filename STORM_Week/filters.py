@@ -14,7 +14,7 @@ def filter_switcher(data, settings):
     }
 
     return switcher.get((settings.get("filter parameters:", {}).get("filter type:")), data)\
-        (data, (settings.get("filter parameters:", {}).get("input parameter a")),(settings.get("filter parameters:", {}).get("input parameter b")))
+        (data, (settings.get("filter parameters:", {}).get("input parameter a")), (settings.get("filter parameters:", {}).get("input parameter b")))
 
 
 ### DIFFERENCE OF GAUSSIANS
@@ -77,7 +77,7 @@ def diff_of_gauss (data, narrow_width, wide_width): # Define function ot perform
 # The kernel data is in list of form to be converted within the array to a matrix.
 # e.g. matrix = [(1, 2, 1), (2, 4, 2), (1, 2, 1)]
 
-def kernel_filter(data, matrix):
+def kernel_filter(data, matrix, empty):
     image = data
     kernel = np.asarray(matrix)
 
