@@ -48,6 +48,7 @@ def dog_params (param_a, param_b):
 
 
 def diff_of_gauss (data, narrow_width, wide_width):  # Define function ot perform filtering
+    wide_width, narrow_width = dog_params(narrow_width, wide_width)
     height_narrow = gauss_height(narrow_width)  # Calculate height from widths inputed
     height_wide = gauss_height(wide_width)
     narrow_kern = build_2d_gauss(narrow_width, height_narrow)  # Build Gaussians
