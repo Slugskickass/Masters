@@ -17,9 +17,10 @@ def filter_switcher(data, settings):
 
 
 ### DIFFERENCE OF GAUSSIAN
+        ###THE WIDTHS OF GAUSSIANS SHOULD BE NO MORE THAN 50 PX.
 
 # Define function to calculate the amplitude of the Gaussian based on an area under the curve of 1 using ingtegral of
-# 2D Gaussian formula
+# 2D Gaussian formula.
 def gauss_height(width):  
     height = (1 / (math.sqrt(2) * np.abs(width) * math.sqrt(math.pi)))/(2*(np.sqrt(2)))
     return height
@@ -47,8 +48,8 @@ def dog_params (param_a, param_b):
     return wide, narrow
 
 
-def diff_of_gauss (data, narrow_width, wide_width):  # Define function ot perform filtering
-    wide_width, narrow_width = dog_params(narrow_width, wide_width)
+def diff_of_gauss (data, param_a, param_b):  # Define function ot perform filtering
+    wide_width, narrow_width = dog_params(param_a,param_b)
     height_narrow = gauss_height(narrow_width)  # Calculate height from widths inputed
     height_wide = gauss_height(wide_width)
     narrow_kern = build_2d_gauss(narrow_width, height_narrow)  # Build Gaussians

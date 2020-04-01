@@ -11,11 +11,11 @@ import json
 parameters = {
         "file name:" : "/Users/mattarnold/Masters/Return1/Matt/STORM/cameraman.tif",
         "filter parameters:" : {
-                "filter type:" : "difference of Gaussians",
+                "filter type:" : "DOG",
                 "input parameter a" : 40,
                 "input parameter b" : 40,
         }
 }
 
-with open("DOG_params.json", "w") as write_file:
+with open("params.json", "w") as write_file:
     json.dump(parameters, write_file)
