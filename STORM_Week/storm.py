@@ -1,15 +1,16 @@
 import json
 import general as genr
+import matplotlib.pyplot as plt
 import filters
 
 ### IMPORT SECTION ####
 #json file builder (should be easy to adapt to accept any filter and its inputs as param_a and param_b)
 parameters = {
-        "file name:" : "/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/STORM_Week/640.tif",
+        "file name:" : "/Users/RajSeehra/University/Masters/Semester 2/test folder/00001.tif",
         "filter parameters:" : {
                 "filter type:" : "DOG",
-                "input parameter a" : 20,
-                "input parameter b" : 200,
+                "input parameter a" : 1,
+                "input parameter b" : 5,
         }
 }
 
@@ -55,4 +56,5 @@ file = genr.load_img(params["file name:"])
 filtered_data = filters.filter_switcher(file, params)
 
 
-
+plt.imshow(filtered_data)
+plt.show()
