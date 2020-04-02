@@ -102,7 +102,7 @@ def kernel_filter(data, matrix, empty):
     edge_cover_h = (kernel.shape[1] - 1) // 2
 
     # to determine if the file has multiple frames or not.
-    if image.shape[2] > 1:
+    if data.ndim > 2: #if image.shape[2] > 1: ##I have edited as 2D image have no 3rd dimension so programme crashes if passed 2D data. Matt
         # adds an edge to allow pixels at the border to be filtered too.
         bordered_image = np.pad(image, ((edge_cover_v, edge_cover_v), (edge_cover_h, edge_cover_h), (0, 0)))
         # Our blank canvas below.

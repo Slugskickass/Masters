@@ -25,10 +25,18 @@ def otsu(filtered_data):
 def stat_thresh(filtered_data, num_std):
     mean = np.mean(filtered_data) # Calculate mean of data
     std = np.std(filtered_data) # Calculate std of data
-    thresh = mean - (std * int(num_std)) # Calculate threshold value
+    thresh = mean + (std * int(num_std)) # Calculate threshold value
     for x in range(np.size(filtered_data,0)): # Iterate through px in x...
         for y in range(np.size(filtered_data,1)): # ...and y
             if filtered_data[x,y] < thresh: # If the pixel value is less than the threshold...
                 filtered_data[x,y] = 0 #... set the value for the pixel to zero.
     return filtered_data
  
+data = np.load('filtered_img.npy')
+
+thresh = stat_thresh(data,4)
+
+plt.imshow(thresh)
+plt.show
+
+np.save('thresholded_img.npy',thresh)
