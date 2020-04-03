@@ -1,1 +1,1 @@
-{"file name:": "/Users/mattarnold/Masters/STORM_Week/00062.tif", "filter parameters:": {"filter type:": "DOG", "input parameter a": 1, "input parameter b": 25}}
+{"file name:": "/Users/mattarnold/Masters/STORM_Week/00062.tif", "filter parameters:": {"filter type:": "kernel", "input parameter a": [[0, -1, 0], [-1, 5, -1], [0, -1, 0]], "input parameter b": ""}}
