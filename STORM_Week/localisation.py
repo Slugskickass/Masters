@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Apr  2 12:38:02 2020
-
-@author: mattarnold
-"""
 import math
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,9 +6,9 @@ from skimage.measure import regionprops, regionprops_table
 
 data = np.load('thresholded_img.npy')
 int_data = data.astype(np.uint32)
-props = ['label','centroid','area']
+props = ['label', 'centroid', 'area']
 
-locations = regionprops_table(int_data,properties=props)
+locations = regionprops_table(int_data, properties=props)
 
 table = pd.DataFrame(locations)
 

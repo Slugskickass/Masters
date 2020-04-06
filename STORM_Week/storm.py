@@ -32,28 +32,8 @@ with open("params.json", "w") as write_file:
 with open("params.json", "r") as read_file:
     params = json.load(read_file)
 
-###UNPACKING### (Might remove)
-# file = params['file name:'] # Unpack file name to variable "file"
-# filter_params = params['filter parameters:'] # Unpack parameters
-# filter_type = filter_params['filter type:']
-# param_a = filter_params['input parameter a'] # save inputted widths as variables
-# param_b = filter_params['input parameter b']
-#
-# # Command to determine desired filter
-# if filter_type == "DOG":
-#     # Determine input params
-#     wide, narrow = filters.dog_params(param_a, param_b)
-#
-#     # Load image as array
-#     data = genr.load_img(file)
-#
-#     # Perform filtering operation
-#     DOG = filters.diff_of_gauss(data,narrow,wide)
-#
-# #
-##
 
-###LOAD IN THE DATA
+### LOAD IN THE DATA ###
 
 # Create a list of files with the specified file extension within the specified directory
 file_list = []
@@ -62,20 +42,21 @@ for file in os.listdir(params["directory:"]):
         file_list.append(file)
 
 # For each file in the above list, execute the chosen filter and threshold and then save it out as a numpy array
-a=0 # Set up a counter
+
+a = 0   # Set up a counter
 
 folder = "{}/storm_output_data".format(params["directory:"])
 if not os.path.exists(folder):
-    os.mkdir(folder)
+    os.mkdir(folder)        # Makes a directory is there isn't one there.
     
 for name in file_list:
-    a+=1
-    file_name = "{}/{}".format(params["directory:"],name)
+    a+= 1
+    file_name = "{}/{}".format(params["directory:"], name)
     print(file_name)
     img = genr.load_img(file_name)
     
     
-    ###FILTERING####
+    ### FILTERING ###
     # This takes the data and the filter params information and pulls out the relevant information to choose which
     # function to run. Based on the "filter type:", and uses the parameters a and b as required.
     # Matt, at the moment it does not account for your above if statement.
@@ -84,11 +65,11 @@ for name in file_list:
     filtered_data = filters.filter_switcher(img, params)
     
     
-    ###THRESHOLDING###
+    ### THRESHOLDING ###
     # As above, with switcher adapted to thresholds
     thresholded_data = thresholds.threshold_switcher(filtered_data, params)
     
-    np.save('{}/thresholded_img_{}_{}'.format(folder,a,datetime.datetime.now()), thresholded_data)
+    np.save('{}/thresholded_img_{}_{}'.format(folder, a, datetime.datetime.now()), thresholded_data)
 
 #plt.imshow(thresholded_data)
 #plt.show
