@@ -78,7 +78,8 @@ for name in file_list:
     ### LOCALISATION ###
     local = loci.centre_collection(thresholded_data, int(params.get("localisation parameters:", {}).get("lower bound:"))\
                                    , int(params.get("localisation parameters:", {}).get("upper bound:")))
-    local.to_csv('{}/panda_data_{}_{}'.format(folder, a, datetime.datetime.now()))
+
+    local.to_csv('{}/panda_data_{}_{}_{}'.format(folder, a, datetime.datetime.now(), '.csv'))
 
 
 
