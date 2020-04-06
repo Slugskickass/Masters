@@ -24,7 +24,7 @@ def otsu(filtered_data, scale):
     return data_out
 
 ## STATISTICAL THRESHOLD
-    # Input: data in form of numpy ndarray, sumber of standard deviations below threshold is set
+    # Input: data in form of numpy ndarray, number of standard deviations below threshold is set
     # Output: ndarray of thresholded data
 def stat_thresh(filtered_data, num_std):
     mean = np.mean(filtered_data)  # Calculate mean of data
@@ -36,10 +36,13 @@ def stat_thresh(filtered_data, num_std):
                 filtered_data[x,y] = 0  # ... set the value for the pixel to zero.
     return filtered_data
 
+## WAVELET THRESHOLD
+    # Input: data in form of numpy ndarray, number of standard deviations above threshold.
+    # Output: ndarray of thresholded data
 def wavelet(image, scale = 1):
     # This thresholds the data based on db1 wavelet.
     if image.ndim > 2:
-        coeffs2 = pywt.dwt2(image[:, :,np.size(image,2)], 'db1')
+        coeffs2 = pywt.dwt2(image[:, :, np.size(image, 2)], 'db1')
     else:
         coeffs2 = pywt.dwt2(image[:, :], 'db1')
 
