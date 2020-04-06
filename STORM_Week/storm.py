@@ -2,6 +2,7 @@ import json
 import general as genr
 import filters
 import thresholds
+import localisation as loci
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -11,7 +12,7 @@ import datetime
 ### IMPORT SECTION ####
 #json file builder (should be easy to adapt to accept any filter and its inputs as param_a and param_b)
 parameters = {
-        "directory:" : "/Users/mattarnold/Masters/STORM_Week",
+        "directory:" : "/Users/RajSeehra/University/Masters/Semester 2/test folder",
         "extension:" : ".tif",
         "filter parameters:" : {
                 "filter type:" : "kernel",
@@ -20,7 +21,7 @@ parameters = {
                 },
         "threshold parameters:" : {
                 "threshold type:" : "wavelet",
-                "input parameter" : 1
+                "input parameter" : 5
                 
                 }
 }
@@ -67,8 +68,17 @@ for name in file_list:
     ### THRESHOLDING ###
     # As above, with switcher adapted to thresholds
     thresholded_data = thresholds.threshold_switcher(filtered_data, params)
-    
-    np.save('{}/thresholded_img_{}_{}'.format(folder, a, datetime.datetime.now()), thresholded_data)
+
+    # np.save('{}/thresholded_img_{}_{}'.format(folder, a, datetime.datetime.now()), thresholded_data)
+
+
+    ### LOCALISATION ###
+    local = loci.centre_collection(thresholded_data, 5)
+
+    local.to_csv('{}/panda_data_{}_{}'.format(folder, a, datetime.datetime.now()))
+
+
+
 
 #plt.imshow(thresholded_data)
 #plt.show
