@@ -51,14 +51,12 @@ file = genr.load_img(params["file name:"])
 ###FILTERING####
 # This takes the data and the filter params information and pulls out the relevant information to choose which
 # function to run. Based on the "filter type:", and uses the parameters a and b as required.
-# Matt, at the moment it does not account for your above if statement.
-
 
 filtered_data = filters.filter_switcher(file, params)
 
-# np.save('filtered_img', filtered_data)
-plt.imshow(filtered_data)
-plt.show()
+np.save('filtered_img', filtered_data)
+# plt.imshow(filtered_data)
+# plt.show()
 
 
 

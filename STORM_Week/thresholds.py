@@ -30,13 +30,14 @@ def stat_thresh(filtered_data, num_std):
     for x in range(np.size(filtered_data,0)): # Iterate through px in x...
         for y in range(np.size(filtered_data,1)): # ...and y
             if filtered_data[x,y] < thresh: # If the pixel value is less than the threshold...
-                filtered_data[x,y] = 0 #... set the value for the pixel to zero.
+                filtered_data[x,y] = 0 # ... set the value for the pixel to zero.
     return filtered_data
+
 
 def wavelet(image, scale = 1):
     # This thresholds the data based on db1 wavelet.
     if image.ndim > 2:
-        coeffs2 = pywt.dwt2(image[:, :,np.size(image,2)], 'db1')
+        coeffs2 = pywt.dwt2(image[:, :, np.size(image, 2)], 'db1')
     else:
         coeffs2 = pywt.dwt2(image[:, :], 'db1')
 
@@ -71,7 +72,8 @@ def wavelet(image, scale = 1):
     # plt.show()
 
     return thresholded_image
- 
+
+
 data = np.load('filtered_img.npy')
 
 thresh = wavelet(data,1)
