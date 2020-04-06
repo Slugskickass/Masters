@@ -9,6 +9,7 @@ Created on Mon Mar 30 12:18:22 2020
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage.filters import threshold_otsu
+import pywt
 
 ## OTSU THRESHOLD
     # Input: data in form of numpy ndarray
@@ -31,10 +32,49 @@ def stat_thresh(filtered_data, num_std):
             if filtered_data[x,y] < thresh: # If the pixel value is less than the threshold...
                 filtered_data[x,y] = 0 #... set the value for the pixel to zero.
     return filtered_data
+
+def wavelet(image, scale = 1):
+    # This thresholds the data based on db1 wavelet.
+    if image.ndim > 2:
+        coeffs2 = pywt.dwt2(image[:, :,np.size(image,2)], 'db1')
+    else:
+        coeffs2 = pywt.dwt2(image[:, :], 'db1')
+
+    # This assigns the directionality thresholded arrays to variables.
+    LL, (LH, HL, HH) = coeffs2
+
+    # This line helps eliminate the cloud but...
+    coeffs2 = LL * 0, (LH * 1, HL * 1, HH * 1)
+
+    # Reconstruct the image based on our removal of the LL (low frequency) component.
+    new_img = pywt.idwt2(coeffs2, 'db1')
+
+    # Print statements for evaluation purposes.
+    print("Reconstructed image parameters")
+    print("Standard Deviations: ", np.std(new_img))
+    print("Means: ", np.mean(new_img))
+    print("Maxima: ", np.amax(new_img))
+
+    # Thresholding based on the mean and std of the image..
+    thresholded_image = pywt.threshold(new_img, np.mean(new_img) + scale * np.std(new_img), substitute=0, mode='greater')
+
+    # For image viewing purposes.
+    # plt.subplot(131)
+    # plt.imshow(image[:, :, 0], cmap=plt.cm.gray)
+    # plt.title("Original")
+    # plt.subplot(132)
+    # plt.imshow(new_img, cmap=plt.cm.gray)
+    # plt.title("After")
+    # plt.subplot(133)
+    # plt.imshow(thresholded_image, cmap=plt.cm.gray)
+    # plt.title("Thresholded")
+    # plt.show()
+
+    return thresholded_image
  
 data = np.load('filtered_img.npy')
 
-thresh = stat_thresh(data,4)
+thresh = wavelet(data,1)
 
 plt.imshow(thresh)
 plt.show
