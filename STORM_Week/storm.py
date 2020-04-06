@@ -22,8 +22,11 @@ parameters = {
         "threshold parameters:" : {
                 "threshold type:" : "wavelet",
                 "input parameter" : 5
-                
-                }
+                },
+        "localisation parameters:" : {
+                        "lower bound:" : 0,
+                        "upper bound:" : 5
+        }
 }
 
 with open("params.json", "w") as write_file:
@@ -73,8 +76,8 @@ for name in file_list:
 
 
     ### LOCALISATION ###
-    local = loci.centre_collection(thresholded_data, 5)
-
+    local = loci.centre_collection(thresholded_data, int(params.get("localisation parameters:", {}).get("lower bound:"))\
+                                   , int(params.get("localisation parameters:", {}).get("upper bound:")))
     local.to_csv('{}/panda_data_{}_{}'.format(folder, a, datetime.datetime.now()))
 
 

@@ -17,7 +17,7 @@ def threshold_switcher(data, settings):
 ## OTSU THRESHOLD
     # Input: data in form of numpy ndarray
     # Output: ndarray of otsu thresholded data
-def otsu(filtered_data):
+def otsu(filtered_data, scale):
     thresh = threshold_otsu(filtered_data) # Calculate threshold using skimage otsu command
     
     data_out = filtered_data > thresh  # Exclude data less than threshold (WHY DOES THE > OPERATOR WORK HERE BUT NOT BELOW)
