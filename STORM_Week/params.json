@@ -1,1 +1,1 @@
-{"file name:": "/Users/mattarnold/Masters/STORM_Week/00062.tif", "filter parameters:": {"filter type:": "kernel", "input parameter a": [[0, -1, 0], [-1, 5, -1], [0, -1, 0]], "input parameter b": ""}}
+{"directory:": "/Users/mattarnold/Masters/STORM_Week", "extension:": ".tif", "filter parameters:": {"filter type:": "kernel", "input parameter a": [[0, -1, 0], [-1, 5, -1], [0, -1, 0]], "input parameter b": ""}, "threshold parameters:": {"threshold type:": "wavelet", "input parameter": 1}}

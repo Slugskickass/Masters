@@ -11,6 +11,17 @@ import matplotlib.pyplot as plt
 from skimage.filters import threshold_otsu
 import pywt
 
+def threshold_switcher(data, settings):
+    switcher = {
+        'otsu': otsu,
+        'statistical': stat_thresh,
+        'wavelet': wavelet
+    }
+
+    return switcher.get((settings.get("threshold parameters:", {}).get("threshold type:")), data)\
+        (data, (settings.get("threshold parameters:", {}).get("input parameter")))
+
+
 ## OTSU THRESHOLD
     # Input: data in form of numpy ndarray
     # Output: ndarray of otsu thresholded data
@@ -44,7 +55,7 @@ def wavelet(image, scale = 1):
     LL, (LH, HL, HH) = coeffs2
 
     # This line helps eliminate the cloud but...
-    coeffs2 = LL * 0, (LH * 1, HL * 1, HH * 1)
+    coeffs2 = LL * 0, (LH * 0, HL * 1, HH * 0)
 
     # Reconstruct the image based on our removal of the LL (low frequency) component.
     new_img = pywt.idwt2(coeffs2, 'db1')
@@ -72,11 +83,11 @@ def wavelet(image, scale = 1):
 
     return thresholded_image
  
-data = np.load('filtered_img.npy')
-
-thresh = wavelet(data,1)
-
-plt.imshow(thresh)
-plt.show
-
-np.save('thresholded_img.npy',thresh)
+#data = np.load('filtered_img.npy')
+#
+#thresh = wavelet(data,1)
+#
+#plt.imshow(thresh)
+#plt.show
+#
+#np.save('thresholded_img.npy',thresh)

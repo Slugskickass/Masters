@@ -43,7 +43,7 @@ y = np.asarray(table['centroid-1'])
 
 areas = np.asarray(table['area'])
 
-smlr_than = np.where(areas <= 5)
+smlr_than = np.where(areas <= 15)
 bgr_than = np.where(areas > 1)
 
 positions = np.intersect1d(smlr_than,bgr_than)
