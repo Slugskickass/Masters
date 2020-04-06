@@ -60,8 +60,7 @@ for name in file_list:
     # This takes the data and the filter params information and pulls out the relevant information to choose which
     # function to run. Based on the "filter type:", and uses the parameters a and b as required.
     # Matt, at the moment it does not account for your above if statement.
-    
-    
+
     filtered_data = filters.filter_switcher(img, params)
     
     

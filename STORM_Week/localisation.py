@@ -46,3 +46,18 @@ plt.imshow(data)
 #plt.plot(y, x,'x')
 plt.plot(y[positions], x[positions], 'rx')
 plt.show
+
+# def centre_collection(thresholded_data):
+#     # label the image
+#     label_image = label(thresholded_data, connectivity=1)
+#     properties = ['area', 'centroid']
+#
+#     # Calculate the area
+#     regions = regionprops_table(label_image, properties=properties)
+#
+#     # made a panda table, contains, 'area', 'centroid-0', 'centroid-1'
+#     datax = pd.DataFrame(regions)
+#     datax = datax[datax['area'] >= 0]      # at area >0 with std 5 can pick up all the appropriate intensities.
+#     datax= datax[datax['area'] <= 5]
+#     return datax
+
