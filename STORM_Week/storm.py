@@ -24,10 +24,16 @@ parameters = {
                 "threshold type:" : "wavelet",
                 "input parameter" : 5
                 },
+<<<<<<< HEAD
         "localisation parameters:" : {
                         "lower bound:" : 2,
                         "upper bound:" : 20
         }
+=======
+        # "localisation parameters:" : {
+        #                 "scale:" : 0
+        # }
+>>>>>>> d1acf71887d1d4ca06cdfd632675e495eae69ffa
 }
 
 with open("params.json", "w") as write_file:
@@ -79,8 +85,7 @@ for name in file_list:
 
 
     ### LOCALISATION ###
-    local = loci.centre_collection(thresholded_data, int(params.get("localisation parameters:", {}).get("lower bound:"))\
-                                   , int(params.get("localisation parameters:", {}).get("upper bound:")))
+    local = loci.centre_collection(thresholded_data, float(params.get("threshold parameters:", {}).get("input parameter")))
 
     # Append the file name to the list.
     list_o_names = []
