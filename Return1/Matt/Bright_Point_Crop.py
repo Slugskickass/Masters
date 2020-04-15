@@ -43,7 +43,7 @@ def max_intensity_crop (data, side_val):
 #    contingency for if square would exit frame area
     if y - side_length < 0: 
         y = 0 + half_side + 1
-    if y + side_length > np.size(data,1):
+    if y + side_length > data.shape[0]:
         y = (np.size(data,1))-half_side
     if x - side_length < 0:
         x = 0 + half_side + 1
