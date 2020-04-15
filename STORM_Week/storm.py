@@ -85,7 +85,7 @@ for name in file_list:
     # Append the file name to the list.
     list_o_names = []
     for i in range(local.shape[0]):
-        list_o_names.append(os.path.basename(file_name))
+        list_o_names.append(file_name)
     files = pd.DataFrame({"file_name": list_o_names})
     local = pd.concat([local, files], axis=1)
 
