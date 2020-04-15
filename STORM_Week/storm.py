@@ -3,6 +3,7 @@ import general as genr
 import filters
 import thresholds
 import localisation as loci
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -10,7 +11,7 @@ import datetime
 
 
 ### IMPORT SECTION ####
-#json file builder (should be easy to adapt to accept any filter and its inputs as param_a and param_b)
+# json file builder (should be easy to adapt to accept any filter and its inputs as param_a and param_b)
 parameters = {
         "directory:" : "/Users/RajSeehra/University/Masters/Semester 2/test folder",
         "extension:" : ".tif",
@@ -49,6 +50,8 @@ for file in os.listdir(params["directory:"]):
 
 a = 0   # Set up a counter
 
+localised_data = pd.DataFrame(columns=['area', 'centroid-0', 'centroid-1', 'file_name'])
+
 folder = "{}/storm_output_data".format(params["directory:"])
 if not os.path.exists(folder):
     os.mkdir(folder)        # Makes a directory is there isn't one there.
@@ -79,9 +82,18 @@ for name in file_list:
     local = loci.centre_collection(thresholded_data, int(params.get("localisation parameters:", {}).get("lower bound:"))\
                                    , int(params.get("localisation parameters:", {}).get("upper bound:")))
 
-    local.to_csv('{}/panda_data_{}_{}_{}'.format(folder, a, datetime.datetime.now(), '.csv'))
+    # Append the file name to the list.
+    list_o_names = []
+    for i in range(local.shape[0]):
+        list_o_names.append(os.path.basename(file_name))
+    files = pd.DataFrame({"file_name": list_o_names})
+    local = pd.concat([local, files], axis=1)
 
+    # Add local to the global list
+    localised_data = localised_data.append(local)
 
+# Save out the pandas table.
+localised_data.to_csv('{}/panda_data_{}_{}_{}'.format(folder, a, datetime.datetime.now(), '.csv'))
 
 
 #plt.imshow(thresholded_data)
