@@ -2,6 +2,8 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from skimage.morphology import closing, square
+
 from skimage.measure import label, regionprops, regionprops_table
 
 # data = np.load('/Users/RajSeehra/University/Masters/Semester 2/test folder/storm_output_data/thresholded_img_1_2020-04-06 20:15:04.919026.npy')
@@ -47,9 +49,10 @@ from skimage.measure import label, regionprops, regionprops_table
 # plt.plot(y[positions], x[positions], 'rx')
 # plt.show
 
-def centre_collection(thresholded_data, lower_bound=0, upper_bound=5):
+def centre_collection(thresholded_data, scale=1):
+    thresholded_data = closing(thresholded_data > np.mean(thresholded_data) + scale * np.std(thresholded_data))
     # label the image
-    label_image = label(thresholded_data, connectivity=1)
+    label_image = label(thresholded_data, connectivity=2)
     properties = ['area', 'centroid']
 
     # Calculate the area
