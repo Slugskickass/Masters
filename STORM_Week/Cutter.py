@@ -47,14 +47,11 @@ data = pd.read_csv(
 ### BOUNDING ###
 # Remove the excess first column, an artifact from exporting a csv.
 data = data.drop('Unnamed: 0', axis=1)
-data = data.reset_index()
 
 # Filters the data set by the area to remove files that are above or below the thresholding limits.
 data = area_filter(data, 1, 2)
 data = data.reset_index()
-data = data.drop('level_0', axis=1)
 data = data.drop('index', axis=1)
-
 
 
 ### PROCESSING ###
@@ -68,8 +65,7 @@ for i in range(0, data.shape[0]-1):
         file_list.append(data["file_name"][i+1])
 
 # Create an empty array to add the data to.
-cutouts = np.zeros([11, 11, data.shape[0]])
-cutout_dataframe = pd.DataFrame(columns=['frame', 'X', 'Y', 'filename'])
+cutout_dataframe = pd.DataFrame(columns=['frame', 'X', 'Y', 'filename', 'cutout_array'])
 
 for i in range(0, len(file_list)):
     img = genr.load_img(file_list[i])   # loads in the file
@@ -80,15 +76,10 @@ for i in range(0, len(file_list)):
             x = data["centroid-1"][j]
             print(x, y)
 
-            cutouts[:, :, j] = square_area(img, x, y)
-            cutout_current = pd.DataFrame({'frame': [j], 'X': [x],'Y': [y], 'filename': [file_list[i]]})
-            cutout_dataframe = pd.concat([cutout_dataframe, cutout_current], axis=0)
+            cutouts = square_area(img, x, y)
+            cutout_current = pd.DataFrame({'frame': [j], 'X': [x],'Y': [y], 'filename': [file_list[i]],
+                                           'cutout_array': [cutouts]}, index=["{}".format(j)])
+            cutout_dataframe = pd.concat([cutout_dataframe, cutout_current], axis=0)    # Final dataframe.
 
 # Currently Data is offset by the rounding issue with the localisation. Data needs to be adjusted to match.
-
-img2 = genr.load_img("/Users/RajSeehra/University/Masters/Semester 2/test folder/00008.tif")
-plt.subplot(121)
-plt.imshow(cutouts[:,:,4])
-plt.subplot(122)
-plt.imshow(img2)
-plt.show()
+cutout_dataframe.to_csv('particle_position_crops.csv')
