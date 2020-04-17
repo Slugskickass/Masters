@@ -55,7 +55,7 @@ for index in molecules.index:
     centre_x = int(np.floor(molecules.loc[index,"centroid-1"]))
     
     # Call cropping function
-    molecule_crop = point_crop(file, centre_y, centre_x, 30)
+    molecule_crop = point_crop(file, centre_y, centre_x, 7)
     
     # Define variables for saving out data
     file_nm, centroid_one, centroid_zero = molecules.loc[index,"file_name"], molecules.loc[index,"centroid-1"], molecules.loc[index,"centroid-0"]
