@@ -20,8 +20,6 @@ def centre_collection(thresholded_data, scale=1):
     # made a panda table, contains, 'area', 'centroid-0', 'centroid-1'
     datax = pd.DataFrame(regions)
 
-    # datax = datax[datax['area'] >= lower_bound]      # at area >0 with std 5 can pick up all appropriate intensities.
-    # datax= datax[datax['area'] <= upper_bound]
     return datax
 
 
