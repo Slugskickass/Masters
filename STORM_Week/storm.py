@@ -13,7 +13,7 @@ import datetime
 ### IMPORT SECTION ####
 # json file builder (should be easy to adapt to accept any filter and its inputs as param_a and param_b)
 parameters = {
-        "directory:" : "/Users/mattarnold/Masters/STORM_Week",
+        "directory:" : "/Users/RajSeehra/University/Masters/Semester 2/test folder",
         "extension:" : ".tif",
         "filter parameters:" : {
                 "filter type:" : "kernel",
@@ -24,10 +24,9 @@ parameters = {
                 "threshold type:" : "wavelet",
                 "input parameter" : 5
                 },
-        "localisation parameters:" : {
-                        "lower bound:" : 2,
-                        "upper bound:" : 20
-        }
+        # "localisation parameters:" : {
+        #                 "scale:" : 0
+        # }
 }
 
 with open("params.json", "w") as write_file:
@@ -79,8 +78,7 @@ for name in file_list:
 
 
     ### LOCALISATION ###
-    local = loci.centre_collection(thresholded_data, int(params.get("localisation parameters:", {}).get("lower bound:"))\
-                                   , int(params.get("localisation parameters:", {}).get("upper bound:")))
+    local = loci.centre_collection(thresholded_data, float(params.get("threshold parameters:", {}).get("input parameter")))
 
     # Append the file name to the list.
     list_o_names = []
@@ -93,7 +91,7 @@ for name in file_list:
     localised_data = localised_data.append(local)
 
 # Save out the pandas table.
-localised_data.to_csv('{}/panda_data_{}_{}'.format(folder, a, '.csv')) #datetime.datetime.now()))
+localised_data.to_csv('{}/panda_data_{}_{}_{}'.format(folder, a, datetime.datetime.now(), '.csv'))
 
 
 #plt.imshow(thresholded_data)
