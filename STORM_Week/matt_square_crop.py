@@ -26,7 +26,7 @@ def point_crop (data, y, x, side_val):
     if x + side_length > data.shape[0]:
         x = (data.shape[0])-half_side
 #    frame crop performed
-    square_result = data[y - (half_side):y + half_side,x - (half_side):x + half_side]
+    square_result = data[y - (half_side+1):y + half_side,x - (half_side+1):x + half_side]
     
 #    return the square crop area as an ndarray
     return square_result
@@ -70,5 +70,6 @@ for index in molecules.index:
     save_data = pd.concat([save_row,save_data],axis=0)
         
 # Save finished dataframe to .csv in working directory
+save_data.sort_index(axis=0)
 save_data.to_csv("molecules_positions_crops.csv")
 
