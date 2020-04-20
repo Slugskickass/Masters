@@ -35,4 +35,12 @@ def savetiffs(file_name, data):
     else:
         images = im.fromarray(data[:, :])
         images.save(file_name)
+        
+def gaussian(x, y, x0, y0, xalpha, yalpha, A):
+    return A * np.exp(-((x-x0)/xalpha)**2 - ((y-y0)/yalpha)**2)
+
+def _gaussian(M, *args):
+    x, y = M
+    arr = gaussian(x, y, *args)
+    return arr
 
