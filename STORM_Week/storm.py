@@ -4,6 +4,8 @@ import filters
 import thresholds
 import localisation as loci
 import pandas as pd
+import cropping as crop
+import fitting as fit
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -24,9 +26,13 @@ parameters = {
                 "threshold type:" : "wavelet",
                 "input parameter" : 5
                 },
-        # "localisation parameters:" : {
-        #                 "scale:" : 0
-        # }
+        "cropping parameters:" : {
+                "Student_name:" : 'raj',
+                },
+        "fitting parameters: " : {
+                "Student_name:" : 'raj',
+                "size:" : 7
+        }
 }
 
 with open("params.json", "w") as write_file:
@@ -91,8 +97,18 @@ for name in file_list:
     localised_data = localised_data.append(local)
 
 # Save out the pandas table.
-localised_data.to_csv('{}/panda_data_{}_{}_{}'.format(folder, a, datetime.datetime.now(), '.csv'))
+# localised_data.to_csv('{}/panda_data_{}_{}_{}'.format(folder, a, datetime.datetime.now(), '.csv'))
 
+#### CUTTING OUT ####
+cropped_data = crop.crop_switcher(localised_data, params)
+
+# cropped_data.to_csv('particle_position_crops.csv')
+
+#### FILTERING ####
+fitted_data = fit.fitter_switcher(cropped_data, params)
+
+
+# fitted_data.to_csv('fitted_data.csv')
 
 #plt.imshow(thresholded_data)
 #plt.show

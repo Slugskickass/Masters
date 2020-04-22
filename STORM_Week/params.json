@@ -1,4 +1,1 @@
-<<<<<<< HEAD
-{"directory:": "/Users/RajSeehra/University/Masters/Semester 2/test folder", "extension:": ".tif", "filter parameters:": {"filter type:": "kernel", "input parameter a": [[0, -1, 0], [-1, 5, -1], [0, -1, 0]], "input parameter b": ""}, "threshold parameters:": {"threshold type:": "wavelet", "input parameter": 5}}
-
->>>>>>> d1acf71887d1d4ca06cdfd632675e495eae69ffa
+{"directory:": "/Users/RajSeehra/University/Masters/Semester 2/test folder", "extension:": ".tif", "filter parameters:": {"filter type:": "kernel", "input parameter a": [[0, -1, 0], [-1, 5, -1], [0, -1, 0]], "input parameter b": ""}, "threshold parameters:": {"threshold type:": "wavelet", "input parameter": 5}, "cropping parameters:": {"Student_name:": "raj"}, "fitting parameters: ": {"Student_name:": "raj", "size:": 7}}
