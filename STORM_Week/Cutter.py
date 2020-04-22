@@ -77,64 +77,11 @@ for i in range(0, len(file_list)):
             x = data["centroid-1"][j]
             print(x, y)
 
-            cutouts = square_area(img, x, y, 7)
+            cutouts = np.array(square_area(img, x, y, 7))
             cutout_current = pd.DataFrame({'frame': [j], 'X': [x],'Y': [y], 'filename': [file_list[i]],
                                            'cutout_array': [cutouts]}, index=["{}".format(j)])
             cutout_dataframe = pd.concat([cutout_dataframe, cutout_current], axis=0)    # Final dataframe.
 
 # Currently Data is offset by the rounding issue with the localisation. Data needs to be adjusted to match.
-# cutout_dataframe.to_csv('particle_position_crops.csv')
+cutout_dataframe.to_csv('particle_position_crops.csv')
 
-### FITTING ###     Using code from online. UNKNOWN TERRITORY BELOW HERE!!!
-def gaussian(height, center_x, center_y, width_x, width_y):
-    """Returns a gaussian function with the given parameters"""
-    width_x = float(width_x)
-    width_y = float(width_y)
-    return lambda x, y: height*np.exp(
-                -(((center_x-x)/width_x)**2+((center_y-y)/width_y)**2)/2)
-
-def moments(data):
-    """Returns (height, x, y, width_x, width_y)
-    the gaussian parameters of a 2D distribution by calculating its
-    moments """
-    total = data.sum()
-    X, Y = np.indices(data.shape)
-    x = (X*data).sum()/total
-    y = (Y*data).sum()/total
-    col = data[:, int(y)]
-    width_x = np.sqrt(np.abs((np.arange(col.size)-y)**2*col).sum()/col.sum())
-    row = data[int(x), :]
-    width_y = np.sqrt(np.abs((np.arange(row.size)-x)**2*row).sum()/row.sum())
-    height = data.max()
-    return height, x, y, width_x, width_y
-
-def fitgaussian(data):
-    """Returns (height, x, y, width_x, width_y)
-    the gaussian parameters of a 2D distribution found by a fit"""
-    params = moments(data)
-    errorfunction = lambda p: np.ravel(gaussian(*p)(*np.indices(data.shape)) -
-                                 data)
-    p, success = optimize.leastsq(errorfunction, params)
-    return p
-
-# Define the array to be used. MOD this to iterate.
-array1 = cutout_dataframe["cutout_array"][50]
-
-# Provide a base to plot on for imaging
-plt.matshow(array1)
-
-# Run the function to produce the fit
-final_parameters = fitgaussian(array1)
-fit = gaussian(*final_parameters)
-
-plt.contour(fit(*np.indices(array1.shape)), cmap=plt.cm.copper)
-ax = plt.gca()
-(height, x, y, width_x, width_y) = final_parameters
-
-plt.text(0.95, 0.05, """
-x : %.1f
-y : %.1f
-width_x : %.1f
-width_y : %.1f""" %(x, y, width_x, width_y),
-        fontsize=16, horizontalalignment='right',
-        verticalalignment='bottom', transform=ax.transAxes)
