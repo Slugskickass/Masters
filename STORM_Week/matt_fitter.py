@@ -30,8 +30,8 @@ def build_mol_frame (csv_file_path=None):
     # Ditch old index column
     molecules = molecules.loc[:,["file_name", "x-coord", "y-coord", "cutout_square"]]
     # Add colmuns for fitting results
-    molecules["gaussian_fit_centroid-0"] , molecules["gaussian_fit_centroid-1"] = "", ""
-    # Clean arrays
+    molecules["popt"], molecules["centre-x"], molecules["centre-y"] = "", "", ""
+    
     for index in molecules.index:
         clean_array = array_clean(molecules.loc[index,"cutout_square"])
         molecules.at[index,"cutout_square"] = clean_array
@@ -41,7 +41,8 @@ def build_mol_frame (csv_file_path=None):
 # FITTING FUNCTION
     #PARAMETERS: pandas dataframe generated in above function, size of Gaussian for fitting
     #RETURNS: pandas dataframe containing above data, plus fitting positions in x and y for centre
-def df_gauss_fit (mol_frame, size):
+def df_gauss_fit (size, input_mols_df=None):
+    mol_frame = build_mol_frame(input_mols_df)
     # Build "numberlines" of x and y in increments of one up to "size"
     x = np.linspace(0, size-1, size)
     y = np.linspace(0, size-1, size)
@@ -49,28 +50,29 @@ def df_gauss_fit (mol_frame, size):
     X, Y = np.meshgrid(x, y)
     # Convert incremental grids into 1d data for fitting
     xdata = np.vstack((X.ravel(), Y.ravel()))
-    # Define guesses for Gaussian fit
-    param_guess = [3,3,2,2,1]
-    param_array = np.asarray(param_guess)
     
     count=0
     # Work through index of dataframe, attempting a Gaussian fit with defined parameters, on the array in that row
     for index in mol_frame.index:
         try:
             mol_square = mol_frame.at[index,"cutout_square"]
-            popt, pcov = curve_fit(genr._gaussian, xdata, mol_square.ravel(), p0=param_array)
+            # Define guesses for Gaussian fit
+            param_guess = [3,3,mol_square.shape[1],mol_square.shape[0],2,2,np.min(mol_square), np.max(mol_square) - np.min(mol_square)]
+            param_array = np.asarray(param_guess)
+            low_bound, up_bound = [-np.inf,-np.inf,0,0,1,1,-np.inf,-np.inf], [np.inf,np.inf,mol_square.shape[1],mol_square.shape[0],4,4,np.inf,np.inf]
+            popt, pcov = curve_fit(genr._gaussian, xdata, mol_square.ravel(), p0=param_array, bounds=(low_bound,up_bound))
             # Save data for locations from fit to dataframe
-            mol_frame.loc[index,"gaussian_fit_centroid-0"], mol_frame.loc[index,"gaussian_fit_centroid-1"] = popt[0],popt[1]
-            #print(popt)
+            centre-x, centre-y = (mol_frame.loc[index,"x-coord"] - np.floor(size/2) + popt[3]), (mol_frame.loc[index,"y-coord"] - np.floor(size/2) + popt[4])
+            mol_frame.loc[index,"popt"], mol_frame.loc[index,"centre-x"], mol_frame.loc[index,"centre-y"] = popt, centre-x, centre-y
         # If fit is unsuccessful (due to noisy frame), count it and continue to next frame
         except:
             #print("unable to fit square at", mol_frame.loc[index,["file_name","x-coord","y-coord"]])
             count+=1
             continue
     print("The number of failed fits is:", count)
+    mol_frame.to_csv("localisation_data.csv")
     return mol_frame
         
-data = build_mol_frame()
-data1 = df_gauss_fit(data,7)
 
-#data1.to_csv("test.csv")
+localisation_data = df_gauss_fit(7)
+

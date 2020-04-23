@@ -97,14 +97,14 @@ for name in file_list:
     localised_data = localised_data.append(local)
 
 # Save out the pandas table.
-# localised_data.to_csv('{}/panda_data_{}_{}_{}'.format(folder, a, datetime.datetime.now(), '.csv'))
+localised_data.to_csv('{}/panda_data_molecule_locs{}'.format(os.getcwd(),'.csv'))
 
 #### CUTTING OUT ####
 cropped_data = crop.crop_switcher(localised_data, params)
 
 # cropped_data.to_csv('particle_position_crops.csv')
 
-#### FILTERING ####
+#### FITTING ####
 fitted_data = fit.fitter_switcher(cropped_data, params)
 
 
