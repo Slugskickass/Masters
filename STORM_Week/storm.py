@@ -15,7 +15,7 @@ import datetime
 ### IMPORT SECTION ####
 # json file builder (should be easy to adapt to accept any filter and its inputs as param_a and param_b)
 parameters = {
-        "directory:" : "/Users/RajSeehra/University/Masters/Semester 2/test folder",
+        "directory:" : "/ugproj/raj/STORM_Data",
         "extension:" : ".tif",
         "filter parameters:" : {
                 "filter type:" : "kernel",
@@ -110,5 +110,5 @@ fitted_data = fit.fitter_switcher(cropped_data, params)
 
 # fitted_data.to_csv('fitted_data.csv')
 
-#plt.imshow(thresholded_data)
-#plt.show
+plt.plot(fitted_data['X'], fitted_data['Y'], '.')
+plt.show()
