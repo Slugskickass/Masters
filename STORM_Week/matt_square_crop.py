@@ -11,6 +11,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import PIL as im
 import general as genr
+import os
 
 def point_crop (data, y, x, side_val):    
 #    set crop square parameters
@@ -31,45 +32,50 @@ def point_crop (data, y, x, side_val):
 #    return the square crop area as an ndarray
     return square_result
 
-# Load data from .csv to pandas dataframe
-molecules = pd.read_csv("/Users/mattarnold/Masters/STORM_Week/storm_output_data/panda_data_14_.csv")
-molecules = molecules.loc[:,["area", "centroid-0", "centroid-1", "file_name"]]
+def load_csv(csv_pathname='{}/panda_data_{}_{}_{}'.format(os.getcwd(), a, datetime.datetime.now(), '.csv')):
+    # Load data from .csv to pandas dataframe
+    molecules = pd.read_csv(csv_pathname)
+    molecules = molecules.loc[:,["area", "centroid-0", "centroid-1", "file_name"]]
 
-# Load files and then crop molecules
-
-# Define file variable
-file = ""
-
-# Create dataframe to save data into
-save_data = pd.DataFrame(columns=["file_name","x-coord","y-coord","cutout_square"])
-
-# Iterate through indices in imported locations dataframe
-for index in molecules.index:
-
-    # If the file name for current index does not match the current working file, load the file
-    if file is not "{}".format(molecules.loc[index,"file_name"]):
-        file = genr.load_img("{}".format(molecules.loc[index,"file_name"]))
-
-    # Define crop area from centre of mass data in imported locations table    
-    centre_y = int(np.floor(molecules.loc[index,"centroid-0"]))
-    centre_x = int(np.floor(molecules.loc[index,"centroid-1"]))
+    # Create dataframe to save data into
+    save_data = pd.DataFrame(columns=["file_name","x-coord","y-coord","cutout_square"])
     
-    # Call cropping function
-    molecule_crop = point_crop(file, centre_y, centre_x, 7)
+    return molecules, save_data
+
+
+def matt_cropper(molecules, save_data):
+    # Iterate through indices in imported locations dataframe
     
-    # Define variables for saving out data
-    file_nm, centroid_one, centroid_zero = molecules.loc[index,"file_name"], molecules.loc[index,"centroid-1"], molecules.loc[index,"centroid-0"]
+    file = ""
     
-    # Format variables into a pandas series to allow saving to dataframe
-    molecule_crop_id = pd.Series({"file_name":file_nm,"x-coord": centroid_one, "y-coord": centroid_zero ,"cutout_square": molecule_crop})
-    
-    # Convert series to dataframe, with index relating to current value of index variable
-    save_row = pd.DataFrame([molecule_crop_id], index = ["{}".format(index)])
-    
-    # Concatenate the data from this iteration to the created data frame 
-    save_data = pd.concat([save_row,save_data],axis=0)
+    for index in molecules.index:
+
+        # If the file name for current index does not match the current working file, load the file
+        if file is not "{}".format(molecules.loc[index,"file_name"]):
+            file = genr.load_img("{}".format(molecules.loc[index,"file_name"]))
+
+        # Define crop area from centre of mass data in imported locations table    
+        centre_y = int(np.floor(molecules.loc[index,"centroid-0"]))
+        centre_x = int(np.floor(molecules.loc[index,"centroid-1"]))
         
-# Save finished dataframe to .csv in working directory
-save_data.sort_index(axis=0)
-save_data.to_csv("molecules_positions_crops.csv")
+        # Call cropping function
+        molecule_crop = point_crop(file, centre_y, centre_x, 7)
+        
+        # Define variables for saving out data
+        file_nm, centroid_one, centroid_zero = molecules.loc[index,"file_name"], molecules.loc[index,"centroid-1"], molecules.loc[index,"centroid-0"]
+        
+        # Format variables into a pandas series to allow saving to dataframe
+        molecule_crop_id = pd.Series({"file_name":file_nm,"x-coord": centroid_one, "y-coord": centroid_zero ,"cutout_square": molecule_crop})
+        
+        # Convert series to dataframe, with index relating to current value of index variable
+        save_row = pd.DataFrame([molecule_crop_id], index = ["{}".format(index)])
+        
+        # Concatenate the data from this iteration to the created data frame 
+        save_data = pd.concat([save_row,save_data],axis=0)
+    
+    # Save finished dataframe to .csv in working directory
+    save_data.sort_index(axis=0)
+    save_data.to_csv("molecules_positions_crops.csv")
+    
+    return save_data
 

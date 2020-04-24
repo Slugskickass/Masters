@@ -124,8 +124,8 @@ def matt_fitter (size, input_mols_df=None):
             low_bound, up_bound = [-np.inf,-np.inf,0,0,1,1,-np.inf,-np.inf], [np.inf,np.inf,mol_square.shape[1],mol_square.shape[0],4,4,np.inf,np.inf]
             popt, pcov = curve_fit(genr._gaussian, xdata, mol_square.ravel(), p0=param_array, bounds=(low_bound,up_bound))
             # Save data for locations from fit to dataframe
-            centre-x, centre-y = (mol_frame.loc[index,"x-coord"] - np.floor(size/2) + popt[3]), (mol_frame.loc[index,"y-coord"] - np.floor(size/2) + popt[4])
-            mol_frame.loc[index,"popt"], mol_frame.loc[index,"centre-x"], mol_frame.loc[index,"centre-y"] = popt, centre-x, centre-y
+            centre_x, centre_y = (mol_frame.loc[index,"x-coord"] - np.floor(size/2) + popt[3]), (mol_frame.loc[index,"y-coord"] - np.floor(size/2) + popt[4])
+            mol_frame.loc[index,"popt"], mol_frame.loc[index,"centre-x"], mol_frame.loc[index,"centre-y"] = popt, centre_x, centre_y
         # If fit is unsuccessful (due to noisy frame), count it and continue to next frame
         except:
             #print("unable to fit square at", mol_frame.loc[index,["file_name","x-coord","y-coord"]])
