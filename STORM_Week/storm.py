@@ -110,5 +110,5 @@ fitted_data = fit.fitter_switcher(cropped_data, params)
 
 # fitted_data.to_csv('fitted_data.csv')
 
-#plt.imshow(thresholded_data)
-#plt.show
+plt.plot(fitted_data['X'], fitted_data['Y'], '.')
+plt.show()
