@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.optimize import curve_fit
 import pandas as pd
+import general as genr
 import ast
 import os
 
