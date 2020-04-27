@@ -61,14 +61,21 @@ def raj_fitter(data, empty):
     data = data.drop('index', axis=1)
 
     fitted_centres = pd.DataFrame(columns=['X', 'Y', 'guess'])
+    count = 0
     for i in range(0, data.shape[0]):
-        # array = clean_array(data["cutout_array"][i])
-        array = data["cutout_array"][i]
+        try:
+            # array = clean_array(data["cutout_array"][i])
+            array = data["cutout_array"][i]
 
-        fitted_data = gaussian_fitter(data, array, i)
-        current = pd.DataFrame({'X': fitted_data[1], 'Y': fitted_data[2], 'guess': [fitted_data[3]]},
-                               index=["{}".format(i)])
-        fitted_centres = pd.concat([fitted_centres, current], axis=0)  # Final dataframe.
+            fitted_data = gaussian_fitter(data, array, i)
+            current = pd.DataFrame({'X': fitted_data[1], 'Y': fitted_data[2], 'guess': [fitted_data[3]]},
+                                   index=["{}".format(i)])
+            fitted_centres = pd.concat([fitted_centres, current], axis=0)  # Final dataframe.
+        except:
+            #print("unable to fit square at", mol_frame.loc[index,["file_name","x-coord","y-coord"]])
+            count+=1
+            continue
+        print("The number of failed fits is:", count)
     return fitted_centres
 
 
