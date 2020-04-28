@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 
-def pixel_cutter(file_name, x_position, y_position, window_size_x, window_size_y, frame):
+def pixel_cutter(file_name, x_position, y_position, window_size_x=10, window_size_y=10, frame=0):
     img = Image.open(file_name)
     frame = frame - 1
     x = window_size_x
@@ -32,7 +32,8 @@ def pixel_cutter(file_name, x_position, y_position, window_size_x, window_size_y
     # Plotting the area.
     return imgArray[ycoordmin:ycoordmax, xcoordmin:xcoordmax, frame]
 
-#Example
+
+# Example
 # x = pixel_cutter("/Users/RajSeehra/University/Masters/Semester 2/Teaching_python-master/Images/bacteria.tif", 15,100, 15,15, 0)
 # print(np.shape(x))
 # plt.imshow(x)
@@ -40,15 +41,16 @@ def pixel_cutter(file_name, x_position, y_position, window_size_x, window_size_y
 
 
 def Gaussian_Map(image_size, offset, centre_x, centre_y, width, amplitude):
-    #Image Generation
-    x, y = np.meshgrid(np.linspace(-1,1,image_size[1]), np.linspace(-1, 1, image_size[0]))
+    # Image Generation
+    x, y = np.meshgrid(np.linspace(-image_size[1]//2, image_size[1]//2, image_size[1]),
+                       np.linspace(-image_size[0]//2, image_size[0]//2, image_size[0]))
     dist = np.sqrt((x-centre_x) ** 2 + (y+centre_y) ** 2)
-    intensity = offset + amplitude * np.exp(-( (dist)**2 / ( 2.0 * width**2 ) ) )
+    intensity = offset + amplitude * np.exp(-(dist ** 2 / (2.0 * width ** 2)))
     return intensity
 
 
 def get_file_list(dir):
-    #dir = '/ugproj/Raj/Flash4/'
+    # dir = '/ugproj/Raj/Flash4/'
     file_list = []
     for file in os.listdir(dir):
         if file.endswith(".tif"):
@@ -95,10 +97,57 @@ def savetiffs(file_name, data):
         images[0].save(file_name, save_all=True, append_images=images[1:])
 
 
-def filter_switcher(data, settings):
-    switcher = {
-        'kernel' : kernel_filter(data, settings["filter"]),
-        'DOG' : DOG(data, settings("filter")),
-    }
+# Kernel filter.
+def kernel_filter(data, matrix):
+    image = data
+    kernel = np.asarray(matrix)
 
-    return switcher.get(settings["filter"], data)
+    # Error check in case the matrix has an even number of sides.
+    if kernel.shape[0] % 2 == 0 or kernel.shape[1] % 2 == 0:
+        print("The matrix has an even number of rows and/or columns. Please make them odd and run again.")
+
+    if sum(sum(kernel)) != 1:       # Quick check to ensure the kernel matrix is within parameters.
+        print("Error, this matrix's summation value is not equal to 1. This can change the final image.")
+        print("The program has divided the matrix by the sum total to return it to a value of 1.")
+        print(("This total value is: " + str(sum(sum(kernel)))))
+        kernel = kernel / sum(sum(kernel))
+        print(kernel)
+
+    # Takes the filter size and allows for a rectangular matrix.
+    edge_cover_v = (kernel.shape[0] - 1) // 2
+    edge_cover_h = (kernel.shape[1] - 1) // 2
+
+    # to determine if the file has multiple frames or not.
+    if data.ndim > 2:
+        # adds an edge to allow pixels at the border to be filtered too.
+        bordered_image = np.pad(image, ((edge_cover_v, edge_cover_v), (edge_cover_h, edge_cover_h), (0, 0)))
+        # Our blank canvas below.
+        processed_image = np.zeros((bordered_image.shape[1], bordered_image.shape[0], bordered_image.shape[2]))
+
+        # Iterates the z, x and y positions.
+        for z in range(0, bordered_image.shape[2]):
+            for x in range(edge_cover_h, bordered_image.shape[1] - edge_cover_h):
+                for y in range(edge_cover_v, bordered_image.shape[0] - edge_cover_v):
+                    kernel_region = bordered_image[y - edge_cover_v:y + edge_cover_v + 1,
+                                    x - edge_cover_h:x + edge_cover_h + 1, z]
+                    k = (kernel * kernel_region).sum()
+                    processed_image[y, x, z] = k
+        # Cuts out the image to be akin to the original image size.
+        processed_image = processed_image[edge_cover_v:processed_image.shape[0] - edge_cover_v,
+                          edge_cover_h:processed_image.shape[1] - edge_cover_h, :]
+
+    else:
+        # adds an edge to allow pixels at the border to be filtered too.
+        bordered_image = np.pad(image, ((edge_cover_v, edge_cover_v), (edge_cover_h, edge_cover_h)))
+        # Our blank canvas below.
+        processed_image = np.zeros((bordered_image.shape[1], bordered_image.shape[0]))
+
+        # Iterates the x and y positions.
+        for x in range(edge_cover_h, bordered_image.shape[1]-edge_cover_h):
+            for y in range(edge_cover_v, bordered_image.shape[0]-edge_cover_v):
+                kernel_region = bordered_image[y-edge_cover_v:y+edge_cover_v+1, x-edge_cover_h:x+edge_cover_h+1]
+                k = (kernel * kernel_region).sum()
+                processed_image[y, x] = k
+        # Cuts out the image to be akin to the original image size.
+        processed_image = processed_image[edge_cover_v:processed_image.shape[1]-edge_cover_v, edge_cover_h:processed_image.shape[0]-edge_cover_h]
+    return processed_image
