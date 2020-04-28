@@ -60,7 +60,7 @@ for i in range(0, file.shape[2]):
 # plt.title("correl")
 # plt.subplot(236)
 # plt.imshow(psf)
-# plt.title("X correl")
+# plt.title("PSF")
 # plt.show()
 
 # plot loop
