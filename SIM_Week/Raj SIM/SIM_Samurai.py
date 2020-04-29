@@ -5,7 +5,7 @@ import os
 
 def psf_generator(NA, wavelength, pixel_size=100, correction=1):
     psf = ((wavelength/pixel_size)/(NA*correction))/np.sqrt(8*np.log(2))         # contains a sigma conversion.
-    banana = Gaussian_Map((521, 521), 0, 0, 0, psf, 1)
+    banana = Gaussian_Map((513, 513), 0, 0, 0, psf, 1)
     return banana
 
 
