@@ -3,41 +3,10 @@ import numpy as np
 import os
 
 
-def pixel_cutter(file_name, x_position, y_position, window_size_x=10, window_size_y=10, frame=0):
-    img = Image.open(file_name)
-    frame = frame - 1
-    x = window_size_x
-    y = window_size_y
-
-    imgArray = np.zeros((img.size[1], img.size[0], img.n_frames), np.uint16)
-    imgArray[:, :, frame] = img
-    img.close()
-
-    # Assign centre and ascertain coords for image, the -1 is to ensure even spreading either side of the centre point.
-    xcoordmin = x_position - int(x / 2)-1
-    xcoordmax = x_position + int(x / 2)
-    ycoordmin = y_position - int(y / 2)-1
-    ycoordmax = y_position + int(y / 2)
-
-    # check no negative numbers
-    if xcoordmin < 0:
-        xcoordmin = 0
-    if xcoordmax > img.size[0]:
-        xcoordmax = img.size[0]
-    if ycoordmin < 0:
-        ycoordmin = 0
-    if ycoordmax > img.size[1]:
-        ycoordmax = img.size[1]
-
-    # Plotting the area.
-    return imgArray[ycoordmin:ycoordmax, xcoordmin:xcoordmax, frame]
-
-
-# Example
-# x = pixel_cutter("/Users/RajSeehra/University/Masters/Semester 2/Teaching_python-master/Images/bacteria.tif", 15,100, 15,15, 0)
-# print(np.shape(x))
-# plt.imshow(x)
-# plt.show()
+def psf_generator(NA, wavelength, pixel_size=100, correction=1):
+    psf = ((wavelength/pixel_size)/(NA*correction))/np.sqrt(8*np.log(2))         # contains a sigma conversion.
+    banana = Gaussian_Map((513, 513), 0, 0, 0, psf, 1)
+    return banana
 
 
 def Gaussian_Map(image_size, offset, centre_x, centre_y, width, amplitude):
@@ -97,10 +66,9 @@ def savetiffs(file_name, data):
         images[0].save(file_name, save_all=True, append_images=images[1:])
 
 
-# Kernel filter.
 def kernel_filter(data, matrix):
     image = data
-    kernel = np.asarray(matrix)
+    kernel = np.asarray(matrix, dtype=complex)
 
     # Error check in case the matrix has an even number of sides.
     if kernel.shape[0] % 2 == 0 or kernel.shape[1] % 2 == 0:
@@ -111,7 +79,7 @@ def kernel_filter(data, matrix):
         print("The program has divided the matrix by the sum total to return it to a value of 1.")
         print(("This total value is: " + str(sum(sum(kernel)))))
         kernel = kernel / sum(sum(kernel))
-        print(kernel)
+        # print(kernel)
 
     # Takes the filter size and allows for a rectangular matrix.
     edge_cover_v = (kernel.shape[0] - 1) // 2
@@ -122,7 +90,7 @@ def kernel_filter(data, matrix):
         # adds an edge to allow pixels at the border to be filtered too.
         bordered_image = np.pad(image, ((edge_cover_v, edge_cover_v), (edge_cover_h, edge_cover_h), (0, 0)))
         # Our blank canvas below.
-        processed_image = np.zeros((bordered_image.shape[1], bordered_image.shape[0], bordered_image.shape[2]))
+        processed_image = np.zeros((bordered_image.shape[1], bordered_image.shape[0], bordered_image.shape[2]), dtype=complex)
 
         # Iterates the z, x and y positions.
         for z in range(0, bordered_image.shape[2]):
@@ -140,7 +108,7 @@ def kernel_filter(data, matrix):
         # adds an edge to allow pixels at the border to be filtered too.
         bordered_image = np.pad(image, ((edge_cover_v, edge_cover_v), (edge_cover_h, edge_cover_h)))
         # Our blank canvas below.
-        processed_image = np.zeros((bordered_image.shape[1], bordered_image.shape[0]))
+        processed_image = np.zeros((bordered_image.shape[1], bordered_image.shape[0]), dtype=complex)
 
         # Iterates the x and y positions.
         for x in range(edge_cover_h, bordered_image.shape[1]-edge_cover_h):
