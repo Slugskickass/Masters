@@ -13,10 +13,10 @@ fft = np.zeros((file.shape[1], file.shape[0], file.shape[2]), dtype=complex)
 correls = np.zeros((file.shape[1], file.shape[0], file.shape[2]))
 
 # establish psf and otf
-psf = sam.psf_generator(1.2, 680)
+psf = sam.psf_generator(1.2, 680, 97)
 otf = scipy.fft.fftshift(scipy.fft.fft2(psf))
 
-for i in range(0, file.shape[2]):
+for i in range(0, 1):
     # Fourier transform the original image and shift the shape to the centre.
     fft[:, :, i] = scipy.fft.fft2(file[:, :, i])
     shifted = scipy.fft.fftshift(fft[:,:,i])
@@ -63,9 +63,11 @@ for i in range(0, file.shape[2]):
 # plt.title("PSF")
 # plt.show()
 
-# plot loop
-for i in range(0, file.shape[2]):
-    plt.subplot(3, 4, i+1)
-    plt.imshow(correls[:, :, i])
-    plt.title("Frame " + str(i))
+# # plot loop
+# for i in range(0, file.shape[2]):
+#     plt.subplot(3, 4, i+1)
+#     plt.imshow(correls[:, :, i])
+#     plt.title("Frame " + str(i))
+
+plt.imshow(correls[:,:,0])
 plt.show()
