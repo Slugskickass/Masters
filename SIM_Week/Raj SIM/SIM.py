@@ -21,14 +21,11 @@ for i in range(0, file.shape[2]):
     fft[:, :, i] = scipy.fft.fft2(file[:, :, i])
     shifted = scipy.fft.fftshift(fft[:, :, i])
 
-    # Multiply (convolve) the fourier image with the OTF.
-    multiply = sam.kernel_filter(shifted, otf)
-
-    # Produce the complex conjugate
-    cmplx = np.conj(multiply)
+    # Multiply (convolve) the fourier image with the OTF + conjugate OTF
+    multiply = shifted * np.conj(otf)
 
     # Correlate the fourier image with the complex conjugate and shift to the centre.
-    correl = scipy.fft.fftshift(signal.correlate2d(fft[:, :, i], cmplx, mode='same'))
+    correl = scipy.fft.fftshift(signal.correlate2d(fft[:, :, i], multiply, mode='same'))
 
     # Builds the array.
     correls[:, :, i] = np.abs(correl)

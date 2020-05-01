@@ -3,10 +3,17 @@ import numpy as np
 import os
 
 
-def psf_generator(NA, wavelength, pixel_size=100, correction=1):
-    psf = ((wavelength/pixel_size)/(NA*correction))/np.sqrt(8*np.log(2))         # contains a sigma conversion.
-    banana = Gaussian_Map((513, 513), 0, 0, 0, psf, 1)
+def psf_generator(NA, wavelength, pixel_size=100, frame_size=100, correction=1):
+    # FWHM = np.sqrt(8*np.log(2)) * sigma
+    sigma = (np.sqrt(8*np.log(2)) * wavelength / (2 * NA * correction)) / pixel_size
+    t = frame_size
+    xo = np.floor(t / 2)
+    u = np.linspace(0, t - 1, t)
+    v = np.linspace(0, t - 1, t)
+    [U, V] = np.meshgrid(u, v)
+    banana = np.exp(-1 * ((((xo - U) ** 2) / sigma ** 2) + (((xo - V) ** 2) / sigma ** 2)))
     return banana
+
 
 
 def Gaussian_Map(image_size, offset, centre_x, centre_y, width, amplitude):

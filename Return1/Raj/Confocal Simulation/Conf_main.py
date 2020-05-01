@@ -12,7 +12,6 @@ point[25, 25] = 1
 radPSF= sam.radial_PSF(100, 0.05)
 radPSF = np.moveaxis(radPSF, 0, -1)
 
-
 scan = np.zeros((radPSF.shape[1], radPSF.shape[0], radPSF.shape[2]))
 scan = sam.kernel_filter(radPSF, point)
 
