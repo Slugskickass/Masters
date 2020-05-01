@@ -1,6 +1,8 @@
 from PIL import Image
 import numpy as np
 import os
+import microscPSF as msPSF
+
 
 
 def pixel_cutter(file_name, x_position, y_position, window_size_x=10, window_size_y=10, frame=0):
@@ -136,7 +138,7 @@ def kernel_filter(data, matrix):
         processed_image = processed_image[edge_cover_v:processed_image.shape[0] - edge_cover_v,
                           edge_cover_h:processed_image.shape[1] - edge_cover_h, :]
 
-    else:
+    else: ### There seems to be an error in this somewhere ###
         # adds an edge to allow pixels at the border to be filtered too.
         bordered_image = np.pad(image, ((edge_cover_v, edge_cover_v), (edge_cover_h, edge_cover_h)))
         # Our blank canvas below.
@@ -149,5 +151,22 @@ def kernel_filter(data, matrix):
                 k = (kernel * kernel_region).sum()
                 processed_image[y, x] = k
         # Cuts out the image to be akin to the original image size.
-        processed_image = processed_image[edge_cover_v:processed_image.shape[1]-edge_cover_v, edge_cover_h:processed_image.shape[0]-edge_cover_h]
+        processed_image = processed_image[edge_cover_v:processed_image.shape[0]-edge_cover_v, edge_cover_h:processed_image.shape[1]-edge_cover_h]
     return processed_image
+
+
+def radial_PSF(xy_size, pixel_size=0.05):
+    # Radial PSF
+    mp = msPSF.m_params  # Microscope Parameters as defined in microscPSF. Dictionary format.
+
+    pixel_size = pixel_size  # In ?microns
+    xy_size = xy_size  # In pixels.
+
+    pv = np.arange(-5.01, 5.01, pixel_size)  # Creates a 1D array stepping up by denoted pixel size,
+    # Essentially stepping in Z.
+
+    psf_xy1 = msPSF.gLXYZParticleScan(mp, pixel_size, xy_size, pv)  # Matrix ordered (Z,Y,X)
+
+    psf_total = psf_xy1
+
+    return psf_total
