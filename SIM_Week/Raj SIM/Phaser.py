@@ -1,0 +1,55 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import SIM_Samurai as sam
+import pywt
+import scipy
+import pandas as pd
+from skimage.morphology import closing, square
+from skimage.measure import label, regionprops, regionprops_table
+
+
+# IMPORTS
+file = sam.loadtiffs("/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/SIM_Week/Data/SLM-SIM_Tetraspeck200_680nm.tif")
+arrays = np.load("/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/SIM_Week/Raj SIM/SIM arrays.npy")
+
+# SET UP
+array = arrays[:,:,0]
+x = np.mean(array)
+array = pywt.threshold(array, np.mean(array) + 5*np.std(array), mode = "greater")
+
+# PARAMETERS FOR CIRCLE MASK
+a, b = array.shape[0]/2, array.shape[1]/2
+n = array.shape[1]
+r = array.shape[1]/6
+# Produce circle mask, ones grid = to original file and cut out.
+y, x = np.ogrid[-a:n-a, -b:n-b]
+mask = x*x + y*y <= r*r
+ones= np.ones((array.shape[1], array.shape[0]))
+ones[mask] = 0
+# multiply element wise by original array.
+multiply = array * ones
+
+thresholded_data = closing(multiply > 0)
+label_image = label(thresholded_data, connectivity=2)
+properties = ['centroid']
+
+# Calculate the area and centroids
+regions = regionprops_table(label_image, properties=properties)
+
+# made a panda table, contains, 'area', 'centroid-0', 'centroid-1'
+datax = pd.DataFrame(regions)
+
+#NEW STUFF
+
+laser1 = (datax['centroid-1'][0], datax['centroid-0'][0])
+laser2 = (datax['centroid-1'][1], datax['centroid-0'][1])
+
+centre_dist_coords = (array.shape[1]/2-laser1[0], array.shape[0]/2-laser1[1])
+centre_dist_coords2 = (array.shape[1]/2-laser2[0], array.shape[0]/2-laser2[1])
+
+centre_dist1 = np.sqrt(centre_dist_coords[0]**2 + centre_dist_coords[1]**2)
+centre_dist2 = np.sqrt(centre_dist_coords2[0]**2 + centre_dist_coords2[1]**2)
+
+print(centre_dist1, centre_dist2)
+plt.imshow(np.abs((scipy.fft.ifft2(multiply))))
+# plt.show()
