@@ -58,10 +58,11 @@ def crop(beads_frame, mic_array):
     
     a = beads_frame.shape[0]
         
-    size = 20
+    size = 11
     
-    save_array = np.zeros((a, mic_array.shape[1], mic_array.shape[1]))
-        
+    save_array = np.zeros((a, size, size))
+    save_array_fill = np.empty([a, mic_array.shape[1], mic_array.shape[1]])
+    
     
     for x in range(0,beads_frame.shape[0]):
         # Define crop area from centre of mass data in imported locations table    
@@ -70,10 +71,14 @@ def crop(beads_frame, mic_array):
         
         # Call cropping function
         bead_crop = point_crop(mic_array, centre_y, centre_x, size)
-        
-        save_array[x,mic_array.shape[1]//2 - size//2: mic_array.shape[1]//2 + size//2 +1,mic_array.shape[1]//2 - size//2: mic_array.shape[1]//2 + size//2 +1] = bead_crop
-        
-    return save_array
+        save_array[x,:,:] = bead_crop
+
+    fill_val = np.min(save_array) + 1.5*np.std(save_array)
+    save_array_fill.fill(fill_val)
+    
+    print(save_array_fill)
+    save_array_fill[:,mic_array.shape[1]//2 - size//2: mic_array.shape[1]//2 + size//2 +1,mic_array.shape[1]//2 - size//2: mic_array.shape[1]//2 + size//2 +1] = save_array[:,:,:]
+    return save_array_fill
 
 def data_extract(file_path):
     ref = funci.load_img(file_path)
@@ -87,11 +92,11 @@ def data_extract(file_path):
 
     psf = np.mean(crop_beads, axis=0)
     
-    mtf_init = sp.fft.fft2(psf)
+    otf_init = sp.fft.fft2(psf)
     
-    mtf = sp.fft.fftshift(mtf_init)
+    otf = sp.fft.fftshift(otf_init)
     
-    return psf, mtf, sum_ref
+    return sum_ref, psf, otf
 
 
 def complex_conj_test(data_file_path, mtf):
@@ -99,19 +104,19 @@ def complex_conj_test(data_file_path, mtf):
     print("c")
     data_fft = sp.fft.fftshift(sp.fft.fft2(data[:,:,1]))
     print("d")
-    mtf_convolve = sp.signal.convolve2d(mtf,data_fft)
+    otf_convolve = sp.signal.convolve2d(otf,data_fft)
     print("e")
-#    complex_conj = np.conj(mtf_convolve)
-#    print("f")
-    return data_fft, data[:,:,1] #,complex_conj
+    complex_conj = np.conj(otf_convolve)
+    print("f")
+    return data_fft, data[:,:,1] ,complex_conj
 
 print("a")
 
-psf, mtf, sum_ref = data_extract("/Users/mattarnold/Masters/SIM_week/Data/SLM-SIM_Tetraspeck200_680nm.tif")
+sum_ref, psf, otf = data_extract("/Users/mattarnold/Masters/SIM_week/Data/SLM-SIM_Tetraspeck200_680nm.tif")
 
 print("b")
 
-data_fft , data = complex_conj_test("/Users/mattarnold/Masters/SIM_week/Data/TIRF_Tubulin_525nm.tif", mtf)
+data_fft , data, conj = complex_conj_test("/Users/mattarnold/Masters/SIM_week/Data/TIRF_Tubulin_525nm.tif", otf)
 
 
 figure, axes = plt.subplots(figsize = (12,16))
@@ -120,12 +125,12 @@ plt.imshow(sum_ref)
 plt.title("Summed reference image")
 
 plt.subplot(323)
-plt.imshow(psf)
+plt.imshow(psf[210:290,210:290])
 plt.title("PSF")
 
 plt.subplot(324)
-plt.imshow((np.abs(mtf)))
-plt.title("Calculated MTF")
+plt.imshow((np.abs(otf)),norm=LogNorm(vmin=5))
+plt.title("Calculated OTF")
 plt.show
 
 plt.subplot(325)
@@ -138,7 +143,9 @@ plt.imshow((np.abs(data_fft)),norm=LogNorm(vmin=5))
 plt.title("Data FFT")
 plt.show
 
-#plt.subplot(326)
-#plt.imshow((np.abs(conj)))
-#plt.title("Comlex conjugate")
-#plt.show
+plt.subplot(326)
+# =============================================================================
+# plt.imshow((np.real(conj)),norm=LogNorm(vmin=5))
+# =============================================================================
+plt.title("Comlex conjugate")
+plt.show
