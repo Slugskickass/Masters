@@ -7,6 +7,7 @@ from scipy import signal
 # Made a point in centre of 2D array
 point = np.zeros((51, 51))
 point[25, 25] = 1
+point[20,20] = 1
 
 # Made a 3D PSF
 radPSF= sam.radial_PSF(100, 0.05)
