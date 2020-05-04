@@ -27,40 +27,31 @@ def return_shiffetd_fft(Image):
     fft_im_sh = fft.fftshift(fft_im)
     return fft_im_sh
 
-### UNNECESSARY REPEAT?
-#def generate_PSF(NA, lamda, pixel_size, frame_size):
-#    # FWHM = 2.3548 * sigma
-#    sigma = (2.3548 * lamda / (2 * NA)) / pixel_size
-#    t = frame_size
-#    xo = np.floor(t/2)
-#    u = np.linspace(0, t-1, t)
-#    v = np.linspace(0, t-1, t)
-#    [U, V] = np.meshgrid(u, v)
-#    snuggle = np.exp(-1 * ((((xo - U)**2)/sigma**2) + (((xo - V)**2)/sigma**2)))
-#    return snuggle
-
 
 # Done ?
-    #Input: OTF of system (o denoting original/0?)
+    #Input: OTF of system (o denoting microscope system base).
     #Return: point in fourier soace which marks the edge of the OTF
 def OTFedgeF(OTFo):
     w = np.shape(OTFo)[0] #Shape of OTF in a single axis (returns side length), then find half of this
-    wo = w/2
+    wo = w/2        # Should this be w//2 as it is needs to be an integer. Maybe a plus one if required too.
 
-    OTF1 = OTFo[wo+1, :] #New matrix contains central row of otf (lateral cross-section through the theoretical diameter of the symmetrical otf)
-    OTFmax =np.max(np.abs(OTFo)) #Peak value in OTF (presumably central, DC component?)
-    OTFtruncate = 0.01 #Scaling factor
-    i = 1 #Iteration counter
-    while (np.abs(OTF1[1,i]) < OTFtruncate * OTFmax):
+    # Makes a 1D array.
+    OTF1 = OTFo[wo+1, :] # New matrix contains central row of otf (lateral cross-section through the theoretical diameter of the symmetrical otf)
+    OTFmax =np.max(np.abs(OTFo))    # Peak value in OTF (presumably central, DC component?)
+    OTFtruncate = 0.01   # Scaling factor
+    i = 1   # Iteration counter
+    while (np.abs(OTF1[1,i]) < OTFtruncate * OTFmax): # Needs edit to OTF1[i] to reflect 1D nature of array.
     #while the absolute value of given point in the central row of OTF is less than the scale factor multiplied by the max value, for each value of i in x:
-    # what is the shape of OTF1? surely it is 1D?
+    # what is the shape of OTF1? surely it is 1D? Yes, confirmed on testing.
         Kotf = wo+1-i #The half width of the FT +1 minus the iteration count: which point in frequency space axis (1/x) are we at?
         i = i + 1; #Continue to count (i+=1 also works)
-    return Kotf #Return the position in x where the while statement is no longer true: this is where the intensity of the fourier pixel is greater than the 
-                    #max intensity (scaled by the scaling factor) and should return the "edge" of the main intensity pattern in the OTF. Why do we want this?
+    return Kotf # Return the position in x where the while statement is no longer true: this is where the intensity of the fourier pixel is greater than the
+                    # max intensity (scaled by the scaling factor) and should return the "edge" of the main intensity pattern in the OTF. Why do we want this?
+                # We want this as it reduces the space we need to look in to optimise our correlation as we know the start of the peaking.
 
 # Done ?
 #Find input/function names confusing, not easy to know what it is expecting/outputting!
+# The name refers to a 2 opt system for SIM developed by Kai et al. Paper link: https://www.osapublishing.org/DirectPDFAccess/C3B732C2-A58C-DD03-9E565EDD53E3B0C2_248609/oe-21-2-2032.pdf?da=1&id=248609&seq=0&mobile=no
 def PhaseKai2opt(k2fa, fS1aTnoisy, OTFo):
     w = np.shape(fS1aTnoisy)[0] # The size of the image along one side
     wo = w/2 # Not required
@@ -70,6 +61,7 @@ def PhaseKai2opt(k2fa, fS1aTnoisy, OTFo):
 
     Kotf = OTFedgeF(OTFo) # Find the high-frequency envelope of the OTF; THIS IS NOT USED, WHY IS IT HERE?
 
+    # The below section to S1aT is basically making a pattern as is defined in the functions outside. With a few added extras.
     t = w #Why redefine?
     to = t/2 # ^^
     
@@ -79,6 +71,7 @@ def PhaseKai2opt(k2fa, fS1aTnoisy, OTFo):
     [U, V] = np.meshgrid(u, v)
 
     # What is j?  Can't find an equation like this in the paper and not sure what the variables are, so can't work out what this is doing
+    # e ^ (-j* 2pi (k2fa[y]/width * (position_Y- halfwidth) + ktfa[x]/width * (position_X - halfwidth)) * inverse FFT of (FFT of the file multiplied by the conjugated base OTF)
     S1aT = np.exp( -1j * 2 * np.pi * ( k2fa[1]/t * (U-to)+k2fa[0]/t * (V-to))) * fft.ifft2(fS1aT)
 
     fS1aT0 = fft.fft2(S1aT)
