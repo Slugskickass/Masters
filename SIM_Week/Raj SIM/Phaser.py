@@ -10,10 +10,10 @@ from skimage.measure import label, regionprops, regionprops_table
 
 # IMPORTS
 file = sam.loadtiffs("/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/SIM_Week/Data/SLM-SIM_Tetraspeck200_680nm.tif")
-arrays = np.load("/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/SIM_Week/Raj SIM/SIM arrays.npy")
+arrays = np.load("/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/SIM_Week/Raj SIM/SIM arrays 2.npy")
 
 # SET UP
-array = arrays[:,:,1]
+array = arrays[:,:,10]
 gaussian = [(1,2,1),(2,4,2),(1,2,1)]
 array = pywt.threshold(array, np.mean(array) + 5*np.std(array), mode = "greater")
 # array = sam.kernel_filter(array, gaussian)
@@ -69,7 +69,7 @@ model = np.zeros((array.shape[1], array.shape[0]))
 model[laser1[1], laser1[0]] = inten1
 model[laser2[1], laser2[0]] = inten2
 
-
+print( angle1, angle2)
 
 plt.imshow(array)
 # plt.imshow(np.abs(scipy.fft.fftshift(scipy.fft.ifft2(model))))

@@ -40,18 +40,6 @@ def return_shiffetd_fft(Image):
     return fft_im_sh
 
 
-def generate_PSF(NA, lamda, pixel_size, frame_size):
-    # FWHM = 2.3548 * sigma
-    sigma = (2.3548 * lamda / (2 * NA)) / pixel_size
-    t = frame_size
-    xo = np.floor(t/2)
-    u = np.linspace(0, t-1, t)
-    v = np.linspace(0, t-1, t)
-    [U, V] = np.meshgrid(u, v)
-    snuggle = np.exp(-1 * ((((xo - U)**2)/sigma**2) + (((xo - V)**2)/sigma**2)))
-    return snuggle
-
-
 # Done ?
 def OTFedgeF(OTFo):
     w = np.shape(OTFo)[0]
@@ -88,7 +76,7 @@ def PhaseKai2opt(k2fa, fS1aTnoisy, OTFo):
     v = np.linspace(0, t-1, t)
     [U, V] = np.meshgrid(u, v)
 
-    S1aT = np.exp( -1j * 2 * np.pi * ( k2fa[1]/t * (U-to)+k2fa[0]/t * (V-to))) * fft.ifft2(fS1aT)
+    S1aT = np.exp( -1j * 2 * np.pi * (k2fa[1]/t * (U-to)+k2fa[0]/t * (V-to))) * fft.ifft2(fS1aT)
 
     fS1aT0 = fft.fft2(S1aT)
 
@@ -114,7 +102,7 @@ if __name__ == '__main__':
     # number of peaks in x and y respectively
     k2fa = [0.01, 114]
     # Computes a optimisation variable for the phase. ?closer to 0/1 better?
-    autocorrelation = PhaseKai2opt(k2fa,fS1aTnoisy,OTFo)
+    autocorrelation = PhaseKai2opt(k2fa, fS1aTnoisy, OTFo)
     # Generates a patter.
     patter = generate_patter(512, k2fa)
 
