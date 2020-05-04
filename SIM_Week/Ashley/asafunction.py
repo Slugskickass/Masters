@@ -2,11 +2,13 @@ import numpy as np
 import scipy.fft as fft
 from PIL import Image
 
+
 def get_image(filename, frame):
     image = Image.open(filename)
     image.seek(frame)
     data = np.asarray(image)
-    return(data)
+    return data
+
 
 def generate_PSF(NA, lamda, pixel_size, frame_size):
     # FWHM = 2.3548 * sigma
@@ -17,12 +19,14 @@ def generate_PSF(NA, lamda, pixel_size, frame_size):
     v = np.linspace(0, t-1, t)
     [U, V] = np.meshgrid(u, v)
     snuggle = np.exp(-1 * ((((xo - U)**2)/sigma**2) + (((xo - V)**2)/sigma**2)))
-    return(snuggle)
+    return snuggle
+
 
 def return_shiffetd_fft(Image):
     fft_im = fft.fft2(Image)
     fft_im_sh = fft.fftshift(fft_im)
-    return(fft_im_sh)
+    return fft_im_sh
+
 
 def generate_PSF(NA, lamda, pixel_size, frame_size):
     # FWHM = 2.3548 * sigma
@@ -33,7 +37,8 @@ def generate_PSF(NA, lamda, pixel_size, frame_size):
     v = np.linspace(0, t-1, t)
     [U, V] = np.meshgrid(u, v)
     snuggle = np.exp(-1 * ((((xo - U)**2)/sigma**2) + (((xo - V)**2)/sigma**2)))
-    return(snuggle)
+    return snuggle
+
 
 # Done ?
 def OTFedgeF(OTFo):
@@ -47,7 +52,7 @@ def OTFedgeF(OTFo):
     while (np.abs(OTF1[1,i]) < OTFtruncate * OTFmax):
         Kotf = wo+1-i
         i = i + 1;
-    return(Kotf)
+    return Kotf
 
 # Done ?
 def PhaseKai2opt(k2fa, fS1aTnoisy, OTFo):
@@ -78,7 +83,7 @@ def PhaseKai2opt(k2fa, fS1aTnoisy, OTFo):
 
     mA = mA / np.sum(fS1aT0 * np.conj(fS1aT0))
 
-    return(mA)
+    return mA
 
 
 if __name__ == '__main__':
