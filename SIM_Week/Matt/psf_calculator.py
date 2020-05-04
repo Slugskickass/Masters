@@ -130,7 +130,7 @@ def complex_conj_test(data_file_path, mtf):
     data_fft = sp.fft.fftshift(sp.fft.fft2(data[:,:,1]))
     
     #Convolv this with the OTF
-    otf_convolve = sp.signal.convolve2d(otf,data_fft)
+    otf_convolve = np.multiply(otf,data_fft)
     
     #Perform the complex conjugation operation
     complex_conj = np.conj(otf_convolve)
@@ -150,7 +150,7 @@ plt.imshow(sum_ref)
 plt.title("Summed reference image")
 
 plt.subplot(322)
-plt.imshow(psf)
+plt.imshow(psf[250:280,250:280])
 plt.title("PSF")
 
 plt.subplot(325)
@@ -164,11 +164,11 @@ plt.title("Data")
 plt.show
 
 plt.subplot(323)
-plt.imshow((np.abs(data_fft)),norm=LogNorm(vmin=5))
+plt.imshow((np.real(data_fft)),norm=LogNorm(vmin=5))
 plt.title("Data FFT")
 plt.show
 
 plt.subplot(326)
 plt.imshow((np.real(conj)),norm=LogNorm(vmin=5))
-plt.title("Comlex conjugate")
+plt.title("Complex conjugate")
 plt.show
