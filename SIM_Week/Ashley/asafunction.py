@@ -15,9 +15,7 @@ def OTFedgeF(OTFo):
         i = i + 1;
     return(Kotf)
 
-
-
-def PhaseKai2opt(k2fa,fS1aTnoisy,OTFo):
+def PhaseKai2opt(k2fa, fS1aTnoisy, OTFo):
 #% The size of the image
     w = np.shape(fS1aTnoisy)[0]
     wo = w/2
@@ -40,3 +38,9 @@ def PhaseKai2opt(k2fa,fS1aTnoisy,OTFo):
     S1aT = np.exp( -1j * 2 * np.pi * ( k2fa[1]/t * (U-to)+k2fa[0]/t * (V-to))) * fft.ifft2(fS1aT)
 
     fS1aT0 = fft.fft2(S1aT)
+
+    mA = np.sum(fS1aT * np.conj(fS1aT0))
+
+    mA = mA / np.sum(fS1aT0 * np.conj(fS1aT0))
+
+    return(mA)
