@@ -58,6 +58,7 @@ def PhaseKai2opt(k2fa, fS1aTnoisy, OTFo):
 
     fS1aTnoisy = fS1aTnoisy*(1-1*OTFo**10) # FFT of the original image is muliplied by 1-the OTF^10 (why is this? variable seems to suggest denoising?)
     fS1aT = fS1aTnoisy*np.conj(OTFo) # The new image is multiplied byt the conj of the OTF to give the final image (what is the purpose of this?)
+    # Is the above to not change the phase by multiplying the conjugate and the original by variable amounts?
 
     Kotf = OTFedgeF(OTFo) # Find the high-frequency envelope of the OTF; THIS IS NOT USED, WHY IS IT HERE?
 
@@ -80,15 +81,22 @@ def PhaseKai2opt(k2fa, fS1aTnoisy, OTFo):
 
     mA = mA / np.sum(fS1aT0 * np.conj(fS1aT0))
 
-    return mA
+    return mA       # Specifically what does this mean in context and what are we aiming for it to be?
 
 
 if __name__ == '__main__':
     filename = '/Users/Ashley/PycharmProjects/SIMple/Data/SLM-SIM_Tetraspeck200_680nm.tif'
 
-    original_data = get_image(filename, 1)
+# Import data
+    original_data = get_image(filename, 0)
+    # FFT the data
     fS1aTnoisy = return_shiffetd_fft(original_data)
-    k2fa = [0.01, 114]
+
+    # Makes PSF and then fft of PSF
     psf = generate_PSF(1.2, 680, 97, 512)
     OTFo = return_shiffetd_fft(psf)
 
+    # number of peaks in x and y respectively
+    k2fa = [0.01, 114]
+    # Computes a optimisation variable for the phase. ?closer to 0/1 better?
+    autocorrelation = PhaseKai2opt(k2fa, fS1aTnoisy, OTFo)
