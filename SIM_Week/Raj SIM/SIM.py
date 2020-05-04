@@ -13,19 +13,23 @@ fft = np.zeros((file.shape[1], file.shape[0], file.shape[2]), dtype=complex)
 correls = np.zeros((file.shape[1], file.shape[0], file.shape[2]))
 
 # establish psf and otf
-psf = sam.psf_generator(1.2, 680, 1, 0.7)
+psf = sam.psf_generator(1.2, 680, 97, 512, 0.7)
 otf = scipy.fft.fftshift(scipy.fft.fft2(psf))
 
 for i in range(0, file.shape[2]):
+    print("for loop: " + str(i))
     # Fourier transform the original image and shift the shape to the centre.
     fft[:, :, i] = scipy.fft.fft2(file[:, :, i])
     shifted = scipy.fft.fftshift(fft[:, :, i])
 
-    # Multiply (convolve) the fourier image with the OTF + conjugate OTF
-    multiply = shifted * np.conj(otf)
+    # Multiply (convolve) the fourier image with the OTF
+    multiply = shifted * otf
 
+    print("correlate start")
     # Correlate the fourier image with the complex conjugate and shift to the centre.
+    # signal.correlate2d conjugates the second array: multiply
     correl = scipy.fft.fftshift(signal.correlate2d(fft[:, :, i], multiply, mode='same'))
+    print("correlate done")
 
     # Builds the array.
     correls[:, :, i] = np.abs(correl)
@@ -69,4 +73,4 @@ for i in range(0, file.shape[2]):
 # plt.imshow(correls[:, :, 0])
 # plt.show()
 
-np.save('SIM arrays', correls)
+np.save('SIM arrays 2', correls)

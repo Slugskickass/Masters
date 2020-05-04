@@ -13,7 +13,7 @@ file = sam.loadtiffs("/Users/RajSeehra/University/Masters/Semester 2/Git Upload 
 arrays = np.load("/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/SIM_Week/Raj SIM/SIM arrays.npy")
 
 # SET UP
-array = arrays[:,:,9]
+array = arrays[:,:,1]
 gaussian = [(1,2,1),(2,4,2),(1,2,1)]
 array = pywt.threshold(array, np.mean(array) + 5*np.std(array), mode = "greater")
 # array = sam.kernel_filter(array, gaussian)
@@ -40,8 +40,7 @@ regions = regionprops_table(label_image, properties=properties)
 # made a panda table, contains, 'area', 'centroid-0', 'centroid-1'
 datax = pd.DataFrame(regions)
 
-#NEW STUFF
-
+# Position Data
 laser1 = (datax['centroid-1'][0], datax['centroid-0'][0])
 laser2 = (datax['centroid-1'][1], datax['centroid-0'][1])
 
@@ -53,9 +52,14 @@ centre_dist_coords2 = (array.shape[1]/2-laser2[0]-1, array.shape[0]/2-laser2[1]-
 centre_dist1 = np.sqrt(centre_dist_coords[0]**2 + centre_dist_coords[1]**2)
 centre_dist2 = np.sqrt(centre_dist_coords2[0]**2 + centre_dist_coords2[1]**2)
 
+# Angles.
+angle1 = -(180/np.pi)*np.arctan(centre_dist_coords[1]/centre_dist_coords[0])
+angle2 = (180/np.pi)*np.arctan(centre_dist_coords2[1]/centre_dist_coords2[0])
+
+
 # Frequency = 1/ absolute distance from centre. ? how pixel distance affects the result
-frequency1 = 1/centre_dist1 * 97
-frequency2 = 1/centre_dist2 * 97
+frequency1 = 1/(centre_dist1 * 0.000097)
+frequency2 = 1/(centre_dist2 * 0.000097)
 
 # model the space.
 inten1 = file[laser1[1],laser1[0],0]
@@ -67,7 +71,6 @@ model[laser2[1], laser2[0]] = inten2
 
 
 
-print(360*np.cos(centre_dist_coords[0]/centre_dist_coords[1]),360*np.cos(centre_dist_coords2[0]/centre_dist_coords2[1]))
-
-plt.imshow(np.abs(scipy.fft.fftshift(scipy.fft.ifft2(model))))
+plt.imshow(array)
+# plt.imshow(np.abs(scipy.fft.fftshift(scipy.fft.ifft2(model))))
 plt.show()
