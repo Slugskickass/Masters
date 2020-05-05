@@ -11,8 +11,8 @@ def psf_generator(NA, wavelength, pixel_size=100, frame_size=100, correction=1):
     u = np.linspace(0, t - 1, t)
     v = np.linspace(0, t - 1, t)
     [U, V] = np.meshgrid(u, v)
-    banana = np.exp(-1 * ((((xo - U) ** 2) / sigma ** 2) + (((xo - V) ** 2) / sigma ** 2)))
-    return banana
+    psf = np.exp(-1 * ((((xo - U) ** 2) / sigma ** 2) + (((xo - V) ** 2) / sigma ** 2)))
+    return psf
 
 
 

@@ -156,19 +156,19 @@ plt.title("PSF")
 plt.subplot(325)
 plt.imshow((np.abs(otf)),norm=LogNorm(vmin=5))
 plt.title("Calculated OTF")
-plt.show()
+plt.show
 
 plt.subplot(324)
 plt.imshow(data)
 plt.title("Data")
-plt.show()
+plt.show
 
 plt.subplot(323)
 plt.imshow((np.abs(data_fft)),norm=LogNorm(vmin=5))
 plt.title("Data FFT")
-plt.show()
+plt.show
 
 plt.subplot(326)
 plt.imshow((np.real(conj)),norm=LogNorm(vmin=5))
-plt.title("Complex conjugate")
-plt.show()
+plt.title("Comlex conjugate")
+plt.show
