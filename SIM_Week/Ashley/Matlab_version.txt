@@ -38,9 +38,9 @@ if ( DoubleMatSize>0 )
     t = 2*w;
     fS1aT_temp = zeros(t,t);
     fS1aT_temp(wo+1:w+wo,wo+1:w+wo) = fS1aT;
-    %clear fS1aT
+    clear fS1aT
     fS1aT = fS1aT_temp;
-    %clear fS1aT_temp
+    clear fS1aT_temp
 else
     t = w;
 end

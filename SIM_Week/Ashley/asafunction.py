@@ -51,7 +51,7 @@ def OTFedgeF(OTFo):
     i = 1
     while (np.abs(OTF1[1,i]) < OTFtruncate * OTFmax):
         Kotf = wo+1-i
-        i = i + 1;
+        i = i + 1
     return Kotf
 
 # Done ?
@@ -75,7 +75,7 @@ def PhaseKai2opt(k2fa, fS1aTnoisy, OTFo):
     v = np.linspace(0, t-1, t)
     [U, V] = np.meshgrid(u, v)
 
-    S1aT = np.exp( -1j * 2 * np.pi * ( k2fa[1]/t * (U-to)+k2fa[0]/t * (V-to))) * fft.ifft2(fS1aT)
+    S1aT = np.exp(-1j * 2 * np.pi * ( k2fa[1]/t * (U-to)+k2fa[0]/t * (V-to))) * fft.ifft2(fS1aT)
 
     fS1aT0 = fft.fft2(S1aT)
 
