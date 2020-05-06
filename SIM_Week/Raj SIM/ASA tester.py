@@ -101,7 +101,7 @@ if __name__ == '__main__':
 
     # number of peaks in x and y respectively
     k2fa = [0.01, 114]
-    # Computes a optimisation variable for the phase. ?closer to 0/1 better?
+    # Computes a optimisation variable for the phase. closer to 0 better.
     autocorrelation = PhaseKai2opt(k2fa, fS1aTnoisy, OTFo)
     # Generates a patter.
     patter = generate_patter(512, k2fa)
