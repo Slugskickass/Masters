@@ -21,11 +21,11 @@ scan = np.rot90(sam.kernel_filter(radPSF, point),2)
 # print("minimum: " + str(np.min(check)), "maximum: " + str(np.max(check)))
 
 # Made a gaussian. (Our spacial filter)
-spacial_filter = sam.Gaussian_Map((100, 100), 0, 0, 0, 10, 1)
+spacial_filter = sam.Gaussian_Map((51, 51), 0, 0, 0, 5, 1)
 
 pinhole = np.zeros((scan.shape[1], scan.shape[0], scan.shape[2]))
 for i in range(0, scan.shape[2]):
-    pinhole[:, :, i] = scan[:, :, i] * spacial_filter
+    pinhole[:, :, i] = sam.kernel_filter(spacial_filter, scan[:, :, i])
 
 position = 100
 plt.subplot(141)
