@@ -13,7 +13,7 @@ file = sam.loadtiffs("/Users/RajSeehra/University/Masters/Semester 2/Git Upload 
 arrays = np.load("/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/SIM_Week/Raj SIM/SIM arrays 2.npy")
 
 # SET UP
-array = arrays[:,:,10]
+array = arrays[:,:,0]
 gaussian = [(1,2,1),(2,4,2),(1,2,1)]
 array = pywt.threshold(array, np.mean(array) + 5*np.std(array), mode = "greater")
 # array = sam.kernel_filter(array, gaussian)
@@ -53,8 +53,8 @@ centre_dist1 = np.sqrt(centre_dist_coords[0]**2 + centre_dist_coords[1]**2)
 centre_dist2 = np.sqrt(centre_dist_coords2[0]**2 + centre_dist_coords2[1]**2)
 
 # Angles.
-angle1 = -(180/np.pi)*np.arctan(centre_dist_coords[1]/centre_dist_coords[0])
-angle2 = (180/np.pi)*np.arctan(centre_dist_coords2[1]/centre_dist_coords2[0])
+angle1 = (180/np.pi)*np.arctan2(centre_dist_coords[1], centre_dist_coords[0])
+angle2 = (180/np.pi)*np.arctan2(centre_dist_coords2[1], centre_dist_coords2[0])
 
 
 # Frequency = 1/ absolute distance from centre. ? how pixel distance affects the result
