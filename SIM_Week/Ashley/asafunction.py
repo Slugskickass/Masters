@@ -66,8 +66,6 @@ def OTFedgeF(OTFo):
 # The name refers to a 2 opt system for SIM developed by Kai et al. Paper link: https://www.osapublishing.org/DirectPDFAccess/C3B732C2-A58C-DD03-9E565EDD53E3B0C2_248609/oe-21-2-2032.pdf?da=1&id=248609&seq=0&mobile=no
 
 
-
-
 def PhaseKai2opt(k2fa, fS1aTnoisy, OTFo):
     w = np.shape(fS1aTnoisy)[0] # The size of the image along one side
     wo = w/2 # Not required
@@ -99,6 +97,17 @@ def PhaseKai2opt(k2fa, fS1aTnoisy, OTFo):
 
     return (-1 * np.abs(mA))       # Specifically what does this mean in context and what are we aiming for it to be?
 
+def newPhaseKai2opt(k2fa, fS1aTnoisy):
+    S1aT = generate_patter(512, k2fa)
+    output = S1aT * fft.ifftshift(fft.ifft2(fS1aTnoisy))
+    output = fft.fft2(output)
+    summed = np.sum(np.conj(output) * fft.fft2(fS1aTnoisy))
+    return(-1*summed)
+
+
+
+
+
 if __name__ == '__main__':
     filename = '/Users/Ashley/PycharmProjects/SIMple/Data/SLM-SIM_Tetraspeck200_680nm.tif'
 
@@ -112,15 +121,28 @@ if __name__ == '__main__':
     OTFo = return_shiffetd_fft(psf)
 
     # number of peaks in x and y respectively
-    k2fa = [0.01, 110]
-    # Computes a optimisation variable for the phase. ?closer to 0/1 better?
-    #autocorrelation = PhaseKai2opt(k2fa, fS1aTnoisy, OTFo)
-    res = minimize(PhaseKai2opt, x0=k2fa, args=(fS1aTnoisy, OTFo), method='Nelder-Mead', tol=0.001)
+    # points =100
+    # autocorrelation = np.zeros(points)
+    # hold_pla = np.zeros(points)
+    # places = np.linspace(110, 120, points)
+    # for ind, X in enumerate(places):
+    #     k2fa = [X, 0.01]
+    #     hold_pla[ind] = X
+    # # Computes a optimisation variable for the phase. ?closer to 0/1 better?
+    #     autocorrelation[ind] = PhaseKai2opt(k2fa, fS1aTnoisy, OTFo)
+    # plt.plot(hold_pla, autocorrelation)
+    # plt.show()
+
+    k2fa = [0, 110]
+
+    res = minimize(PhaseKai2opt, x0=k2fa, args=(fS1aTnoisy, OTFo), method='Nelder-Mead', tol=0.00001)
+#    res = minimize(newPhaseKai2opt, x0=k2fa, args=(fS1aTnoisy), method='Nelder-Mead', tol=0.000001)
+
     print(res.x)
     print('The magnitude is', np.sqrt(res.x[0]**2 + res.x[1]**2))
     print('The angle is', np.arctan2(res.x[1], res.x[0]))
 
-    reconstructed = generate_patter(512, [res.x[0]/1.26, res.x[1]/1.26])
+    reconstructed = generate_patter(512, [res.x[0], res.x[1]])
     reconstructed_f = fft.ifftshift(fft.fft2(reconstructed))
     position_max = np.argmax(np.abs(reconstructed_f))
     X, Y = np.unravel_index(position_max, [512, 512])
