@@ -125,7 +125,6 @@ def PhaseKai2opt(k2fa,fS1aTnoisy, OTFo):
     v = np.linspace(0, t - 1, t)
     [U, V] = np.meshgrid(u, v)
 
-
     S1aT = np.exp(-1j * 2 * np.pi * (k2fa[1] / t * (U - to)) + (k2fa[0] / t * (V - to))) * fft.ifft2(fS1aT)
     fS1aT0 = fft.fft2(S1aT)
 
@@ -142,7 +141,7 @@ def PhaseKai2opt(k2fa,fS1aTnoisy, OTFo):
 scale = 0.99
 #filename = '/Users/Ashley/PycharmProjects/SIMple/Data/SLM-SIM_Tetraspeck200_680nm.tif'
 #filename = '/Users/Ashley/PycharmProjects/SIMple/Data/Zeiss_Actin_525nm_large.tif'
-filename = '/Users/Ashley/PycharmProjects/SIMple/Data/Zeiss_Actin_525nm_crop.tif'
+filename = '/Users/mattarnold/Masters/SIM_Week/Data/Zeiss_Actin_525nm_crop.tif'
 #filename = '/Users/Ashley/PycharmProjects/SIMple/Data/out.tiff'
 image_data = get_image(filename, 0)
 w = np.shape(image_data)[0]
