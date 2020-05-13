@@ -6,7 +6,7 @@ import microscPSF as msPSF
 mp = msPSF.m_params     # Microscope Parameters as defined in microscPSF. Dictionary format.
 
 pixel_size = 0.05       # In ?microns
-xy_size = 100           # In pixels.
+xy_size = 201           # In pixels.
 
 pv = np.arange(-5.01, 5.01, pixel_size)     # Creates a 1D array stepping up by denoted pixel size,
                                             # Essentially stepping in Z.
@@ -14,7 +14,7 @@ pv = np.arange(-5.01, 5.01, pixel_size)     # Creates a 1D array stepping up by 
 psf_xy1 = msPSF.gLXYZParticleScan(mp, pixel_size, xy_size, pv)       # Matrix ordered (Z,Y,X)
 
 psf_total = psf_xy1
-plt.imshow(psf_total[:, :, 40])
+plt.imshow(psf_total[30, :, :])
 
 # from PIL import Image
 # images = []

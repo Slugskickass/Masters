@@ -182,8 +182,8 @@ def kernel_filter(data, matrix):
         print("The matrix has an even number of rows and/or columns. Please make them odd and run again.")
 
     if kernel.sum() != 1:       # Quick check to ensure the kernel matrix is within parameters.
-        print("Error, this matrix's summation value is not equal to 1. This can change the final image.")
-        print("The program has divided the matrix by the sum total to return it to a value of 1.")
+        print("This matrix's summation value is not equal to 1. This can change the final image.")
+        print("Hence, the program has divided the matrix by the sum total to return it to a value of 1.")
         print(("This total value is: " + str(kernel.sum())))
         kernel = kernel / kernel.sum()
         # print(kernel)
@@ -193,7 +193,7 @@ def kernel_filter(data, matrix):
     edge_cover_h = (kernel.shape[1] - 1) // 2
 
     # to determine if the file has multiple frames or not, runs a 2D kernel along a 3D array.
-    if data.ndim > 2 and kernel.ndim <= 2:
+    if data.ndim == 3 and kernel.ndim == 2:
         print("2D kernel along a 3D array")
         # adds an edge to allow pixels at the border to be filtered too.
         bordered_image = np.pad(image, ((edge_cover_v, edge_cover_v), (edge_cover_h, edge_cover_h), (0, 0)))
@@ -212,8 +212,10 @@ def kernel_filter(data, matrix):
         processed_image = processed_image[edge_cover_v:processed_image.shape[0] - edge_cover_v,
                           edge_cover_h:processed_image.shape[1] - edge_cover_h, :]
 
-    elif data.ndim > 2 and kernel.ndim > 2:     # Runs a 3D matrix across a 3D array
+    elif data.ndim ==3 and kernel.ndim == 3:     # Runs a 3D matrix across a 3D array
         print("A 3D kernel across a 3D array")
+        if kernel.shape[2] % 2 == 0
+            print("The matrix has an even number for Z depth. Please make them odd and run again.")
         edge_cover_d = (kernel.shape[2] - 1) // 2
         # adds an edge to allow pixels at the border to be filtered too.
         bordered_image = np.pad(image, ((edge_cover_v, edge_cover_v), (edge_cover_h, edge_cover_h), (edge_cover_d, edge_cover_d)))
