@@ -4,7 +4,6 @@ import os
 import microscPSF as msPSF
 
 
-
 def pixel_cutter(file_name, x_position, y_position, window_size_x=10, window_size_y=10, frame=0):
     img = Image.open(file_name)
     frame = frame - 1
@@ -214,7 +213,7 @@ def kernel_filter(data, matrix):
 
     elif data.ndim ==3 and kernel.ndim == 3:     # Runs a 3D matrix across a 3D array
         print("A 3D kernel across a 3D array")
-        if kernel.shape[2] % 2 == 0
+        if kernel.shape[2] % 2 == 0:
             print("The matrix has an even number for Z depth. Please make them odd and run again.")
         edge_cover_d = (kernel.shape[2] - 1) // 2
         # adds an edge to allow pixels at the border to be filtered too.
