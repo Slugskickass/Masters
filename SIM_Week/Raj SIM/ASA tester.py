@@ -7,7 +7,8 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 from scipy.ndimage import gaussian_filter
 from scipy import signal
 import scipy.special
-from scipy.optimize import minimize
+from scipy.optimize import minimize, basinhopping
+from matplotlib.colors import LogNorm
 
 
 def build_psf_oft(size, scale):
@@ -106,7 +107,7 @@ def ApproxFreqDuplex(FiSMap,Kotf):
     return(maxK2, Ix, Iy, FiSMap)
 
 
-def PhaseKai2opt(k2fa,fS1aTnoisy, OTFo):
+def PhaseKai2opt(k2fa, fS1aTnoisy, OTFo):
     w = np.shape(fS1aTnoisy)[0]
     wo = np.int(w / 2)
 
@@ -143,7 +144,7 @@ def PhaseKai2opt(k2fa,fS1aTnoisy, OTFo):
     return(CCop)
 
 
-def optimise(axis, k2fa, range=20, iterations=200):
+def debug_k_vector(axis, k2fa, range=20, iterations=200):
     if axis == 'x':
         axis = 0
     elif axis == 'y':
@@ -166,6 +167,7 @@ def optimise(axis, k2fa, range=20, iterations=200):
     res = minimize(PhaseKai2opt, x0=k2fa, args=(fS1aTnoisy, OTFo), method='Nelder-Mead', tol=0.00001)
     return res
 
+
 def edgetaper(image_data, PSF):
 
     return
@@ -175,6 +177,7 @@ def edgetaper(image_data, PSF):
 #filename = '/Users/Ashley/PycharmProjects/SIMple/Data/SLM-SIM_Tetraspeck200_680nm.tif'
 #filename = '/Users/Ashley/PycharmProjects/SIMple/Data/Zeiss_Actin_525nm_large.tif'
 filename = '/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/SIM_Week/Data/SLM-SIM_Tetraspeck200_680nm.tif'
+# filename = '/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/SIM_Week/Data/out.tiff'
 #filename = '/Users/Ashley/PycharmProjects/SIMple/Data/out.tiff'
 image_data = get_image(filename, 0)
 
@@ -192,6 +195,7 @@ PSFo, OTFo = build_psf_oft(w, scale)
 ### EDGE TAPERING RAW SIM IMAGE (WIP) ###
 S1aTnoisy_et = image_data
 # S1aTnoisy_et = edgetaper(image_data, PSFe) # Dont know this function yet. NEED TO MAKE.
+# vignette in real space.
 fS1aTnoisy_et = return_shifted_fft(S1aTnoisy_et)
 ##
 ##
@@ -208,15 +212,39 @@ print('The magnitude is approximately', np.sqrt(k2fa[0]**2 + k2fa[1]**2))
 print('The angle is approximately', np.arctan2(-1*k2fa[0], k2fa[1]))
 
 
+
 ### ITERATOR IN THE REGION ###
+# Function test
+res = minimize(PhaseKai2opt, x0=k2fa, args=(fS1aTnoisy, OTFo), method='Nelder-Mead', tol=0.00001)
+print(res.x)
+print('The magnitude is', np.sqrt(res.x[0]**2 + res.x[1]**2))
+print('The angle is', np.arctan2(-1*res.x[0], res.x[1]))
+
+
+class MyBounds(object):
+    def __init__(self, xmax=[k2fa[0]+10,k2fa[1]+10], xmin=[k2fa[0]-10,k2fa[1]-10] ):
+        self.xmax = np.array(xmax)
+        self.xmin = np.array(xmin)
+    def __call__(self, **kwargs):
+        x = kwargs["x_new"]
+        tmax = bool(np.all(x <= self.xmax))
+        tmin = bool(np.all(x >= self.xmin))
+        return tmax and tmin
+mybounds= MyBounds()
+res = basinhopping(PhaseKai2opt, x0=k2fa, niter=200, minimizer_kwargs={"args":((fS1aTnoisy), (OTFo))}, stepsize=1, accept_test=mybounds, disp=True)
+print(res.x)
+print('The magnitude is', np.sqrt(res.x[0]**2 + res.x[1]**2))
+print('The angle is', np.arctan2(-1*res.x[0], res.x[1]))
+
+# NOT OPTIMISER BUT DEBUGGING STUFF.
 # Optimiser. AXIS, X='x', Y='y'.
-optimised_x = optimise('x', k2fa, 20, 200)
-optimised_y = optimise('y', k2fa, 20, 200)
-print(optimised_x.x)
-print(optimised_y.x)
-
-print('The magnitude in x is ', np.sqrt(optimised_x.x[0]**2 + optimised_x.x[1]**2))
-print('The angle in x is ', np.arctan2(optimised_x.x[1], optimised_x.x[0]))
-
-print('The magnitude in y is', np.sqrt(optimised_y.x[0]**2 + optimised_y.x[1]**2))
-print('The angle in y is', np.arctan2(optimised_y.x[1], optimised_y.x[0]))
+# optimised_x = debug_k_vector('x', k2fa, 20, 200)
+# optimised_y = debug_k_vector('y', k2fa, 20, 200)
+# print(optimised_x.x)
+# print(optimised_y.x)
+#
+# print('The magnitude in x is ', np.sqrt(optimised_x.x[0]**2 + optimised_x.x[1]**2))
+# print('The angle in x is ', np.arctan2(optimised_x.x[1], optimised_x.x[0]))
+#
+# print('The magnitude in y is', np.sqrt(optimised_y.x[0]**2 + optimised_y.x[1]**2))
+# print('The angle in y is', np.arctan2(optimised_y.x[1], optimised_y.x[0]))
