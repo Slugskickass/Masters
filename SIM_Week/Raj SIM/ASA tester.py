@@ -161,11 +161,8 @@ def debug_k_vector(axis, k2fa, range=20, iterations=200):
         k2fa[axis] = I
         CCop[index] = PhaseKai2opt(k2fa, fS1aTnoisy, OTFo)
 
-    plt.plot(points, CCop)
-    plt.show()
-
     res = minimize(PhaseKai2opt, x0=k2fa, args=(fS1aTnoisy, OTFo), method='Nelder-Mead', tol=0.00001)
-    return res
+    return res, CCop, points
 
 
 def edgetaper(image_data, PSF):
@@ -238,14 +235,12 @@ print('The angle is', np.arctan2(-1*res.x[0], res.x[1]))
 
 
 ### NOT OPTIMISER BUT DEBUGGING STUFF. ###
+
 # Optimiser. AXIS, X='x', Y='y'.
-debug_x = debug_k_vector('x', k2fa, 20, 200)
-debug_y = debug_k_vector('y', k2fa, 20, 200)
-print(debug_x.x)
-print(debug_y.x)
+debug_x = debug_k_vector('x', k2fa, 60, 200)
+plt.plot(debug_x[2], debug_x[1])
 
-print('The magnitude in x is ', np.sqrt(debug_x.x[0]**2 + debug_x.x[1]**2))
-print('The angle in x is ', np.arctan2(debug_x.x[1], debug_x.x[0]))
+debug_y = debug_k_vector('y', k2fa, 60, 200)
+plt.plot(debug_y[2], debug_y[1])
 
-print('The magnitude in y is', np.sqrt(debug_y.x[0]**2 + debug_y.x[1]**2))
-print('The angle in y is', np.arctan2(debug_y.x[1], debug_y.x[0]))
+plt.show()
