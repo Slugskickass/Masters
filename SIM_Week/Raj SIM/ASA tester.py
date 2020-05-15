@@ -161,7 +161,7 @@ def debug_k_vector(axis, k2fa, range=20, iterations=200):
         k2fa[axis] = I
         CCop[index] = PhaseKai2opt(k2fa, fS1aTnoisy, OTFo)
 
-    plt.plot(CCop)
+    plt.plot(points, CCop)
     plt.show()
 
     res = minimize(PhaseKai2opt, x0=k2fa, args=(fS1aTnoisy, OTFo), method='Nelder-Mead', tol=0.00001)
@@ -212,7 +212,6 @@ print('The magnitude is approximately', np.sqrt(k2fa[0]**2 + k2fa[1]**2))
 print('The angle is approximately', np.arctan2(-1*k2fa[0], k2fa[1]))
 
 
-
 ### ITERATOR IN THE REGION ###
 # Function test
 res = minimize(PhaseKai2opt, x0=k2fa, args=(fS1aTnoisy, OTFo), method='Nelder-Mead', tol=0.00001)
@@ -221,25 +220,27 @@ print('The magnitude is', np.sqrt(res.x[0]**2 + res.x[1]**2))
 print('The angle is', np.arctan2(-1*res.x[0], res.x[1]))
 
 
-class MyBounds(object):
-    def __init__(self, xmax=[k2fa[0]+10,k2fa[1]+10], xmin=[k2fa[0]-10,k2fa[1]-10] ):
-        self.xmax = np.array(xmax)
-        self.xmin = np.array(xmin)
-    def __call__(self, **kwargs):
-        x = kwargs["x_new"]
-        tmax = bool(np.all(x <= self.xmax))
-        tmin = bool(np.all(x >= self.xmin))
-        return tmax and tmin
-mybounds= MyBounds()
-res = basinhopping(PhaseKai2opt, x0=k2fa, niter=200, minimizer_kwargs={"args":((fS1aTnoisy), (OTFo))}, stepsize=1, accept_test=mybounds, disp=True)
-print(res.x)
-print('The magnitude is', np.sqrt(res.x[0]**2 + res.x[1]**2))
-print('The angle is', np.arctan2(-1*res.x[0], res.x[1]))
+### TESTING WITH BASINHOPPING ###
+# class MyBounds(object):
+#     def __init__(self, xmax=[k2fa[0]+10,k2fa[1]+10], xmin=[k2fa[0]-10,k2fa[1]-10] ):
+#         self.xmax = np.array(xmax)
+#         self.xmin = np.array(xmin)
+#     def __call__(self, **kwargs):
+#         x = kwargs["x_new"]
+#         tmax = bool(np.all(x <= self.xmax))
+#         tmin = bool(np.all(x >= self.xmin))
+#         return tmax and tmin
+# mybounds= MyBounds()
+# res = basinhopping(PhaseKai2opt, x0=k2fa, niter=200, minimizer_kwargs={"args":((fS1aTnoisy), (OTFo))}, stepsize=1, accept_test=mybounds, disp=True)
+# print(res.x)
+# print('The magnitude is', np.sqrt(res.x[0]**2 + res.x[1]**2))
+# print('The angle is', np.arctan2(-1*res.x[0], res.x[1]))
 
-# NOT OPTIMISER BUT DEBUGGING STUFF.
+
+### NOT OPTIMISER BUT DEBUGGING STUFF. ###
 # Optimiser. AXIS, X='x', Y='y'.
-# optimised_x = debug_k_vector('x', k2fa, 20, 200)
-# optimised_y = debug_k_vector('y', k2fa, 20, 200)
+debug_x = debug_k_vector('x', [-114, 2], 20, 200)
+debug_y = debug_k_vector('y', [-114, 2], 20, 200)
 # print(optimised_x.x)
 # print(optimised_y.x)
 #
