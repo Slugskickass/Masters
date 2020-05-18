@@ -178,7 +178,7 @@ def kernel_filter(data, matrix):
         processed_image = processed_image[edge_cover_v:processed_image.shape[0] - edge_cover_v,
                           edge_cover_h:processed_image.shape[1] - edge_cover_h, edge_cover_d:processed_image.shape[2]-edge_cover_d]
 
-    else: ### There seems to be an error in this somewhere ###
+    else:
         print("A 2D kernel across a 2D array")
         # adds an edge to allow pixels at the border to be filtered too.
         bordered_image = np.pad(image, ((edge_cover_v, edge_cover_v), (edge_cover_h, edge_cover_h)))
