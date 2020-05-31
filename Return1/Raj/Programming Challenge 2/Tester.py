@@ -2,7 +2,7 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 
-image = Image.open("/Users/RajSeehra/Downloads/pikachu-images-for-drawing-32.jpg")
+image = Image.open("/Users/RajSeehra/Downloads/pk_amb.jpg")
 
 array = np.asarray(image)
 
