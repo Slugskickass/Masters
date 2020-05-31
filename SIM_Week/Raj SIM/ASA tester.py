@@ -237,10 +237,10 @@ print('The angle is', np.arctan2(-1*res.x[0], res.x[1]))
 ### NOT OPTIMISER BUT DEBUGGING STUFF. ###
 
 # Optimiser. AXIS, X='x', Y='y'.
-debug_x = debug_k_vector('x', k2fa, 60, 200)
+debug_x = debug_k_vector('x', k2fa, 100, 200)
 plt.plot(debug_x[2], debug_x[1])
 
-debug_y = debug_k_vector('y', k2fa, 60, 200)
+debug_y = debug_k_vector('y', k2fa, 100, 200)
 plt.plot(debug_y[2], debug_y[1])
 
 plt.show()
