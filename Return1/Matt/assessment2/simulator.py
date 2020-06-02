@@ -46,14 +46,14 @@ def noise(signal_size):
     return noise_val
 
 
-# BINNING: average theoretical ground truth "pixel" values from the sample plane into the area of corresponding 
+# CAMERA_SIMULATOR: average theoretical ground truth "pixel" values from the sample plane into the area of corresponding 
     # camera pixels in the image plane, taking into account the noise, pixel-induced spatial binning and camera gain.
     # Inputs: the ground truth image after convolution with a calculated point spread function (numpy 2d array), 
         # the effective pixel size of the camera as calculated by cam_params (nm), option to vary ground truth "pixel"
         # size (nm, default = 5nm)
     # Output: the binned image, with dimensions calculated by the integer number of bins which can be composed from
         # the ground truth image (numpy 2d array)
-def binning(psf_convolved_gt, cam_px_size, quantum_efficiency, gt_px_size = 5):
+def camera_simulator(psf_convolved_gt, cam_px_size, quantum_efficiency, gt_px_size = 5):
     gt_side = psf_convolved_gt.shape[1]
     bin_size = cam_px_size//gt_px_size
     camera_gain = 100
@@ -84,6 +84,9 @@ def save_img(file_name, data):
     images.save(file_name)
 
 if __name__ == "__main__":
+   
+    # Use argparse to collect arguments from user input when the programme is initiated in the command line. -h can be used to view
+    # a succinct summary of essential and optional commands.
     parser = argparse.ArgumentParser(description='Produce a simulation of diffraction and camera noise')
     parser.add_argument('-w', "-wavelength", "-lambda", metavar='w', type=float ,required=True, help='the fluorophore emission wavelngth')
     parser.add_argument('-na', "-NA", metavar='na', type=float ,required=True, help='the system numerical aperture')
@@ -94,7 +97,8 @@ if __name__ == "__main__":
     parser.add_argument('-o', "-save", "-output", metavar='o', type=str , default="simulated_image.tif", help='save simulated image as (optional, include file type extension, e.g .tif; path can be included)')
     parser.add_argument('-n', '-noise', metavar='n', type=str, default=None, help='optional, saves image of noise added to camera pixels in simulation to specified file, define as for output image')
     args = parser.parse_args()
-    
+   
+    # Make checks to ensure non-fatal input value errors are not unnoticed
     if args.w > 750 or args.w < 350:
         print("Wavelength entered:",args.w)
         raise ValueError("Wavelength should be in nanometers, for visible light")
@@ -106,15 +110,25 @@ if __name__ == "__main__":
     if args.qe >1:
         raise ValueError("Quantum efficiency must 1 or less")
     
+    
+    # RUN simmulation, calling arguments from argparse
+    
+    # Load and format the artifical ground-truth image
     ground_truth = im.open(args.i)
     gt_array = np.asarray(ground_truth)
     gt_array = gt_array[:,:,1]
     
-    px_size = cam_params(args.px,args.m)
-    psf = psf_simulator (args.na,args.w)
-    convolution = signal.fftconvolve(gt_array,psf,mode="same")
-    binned, noise_array, mean_noise = binning(convolution, px_size, args.qe)        
-    save_img(args.o, binned)
+    px_size = cam_params(args.px,args.m) # Calculate pixel size
+    
+    psf = psf_simulator (args.na,args.w) # Estimate point spread function
+    
+    convolution = signal.fftconvolve(gt_array,psf,mode="same") # Convolve image with PSF using reciprocal space matrix multiplication
+    
+    binned, noise_array, mean_noise = camera_simulator(convolution, px_size, args.qe) # Apply camera simulation
+    
+    save_img(args.o, binned) # Save simulated image
+    
+    # If a noise profile was requested, save the noise profile added to the image and print the mean number of counts added per pixel
     if args.n !=None:
         save_img("{}".format(args.n),noise_array)
         print("The average noise added to a pixel was", mean_noise, "counts")
