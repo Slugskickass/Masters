@@ -174,7 +174,7 @@ def edgetaper(image_data, PSF):
 ### IMPORT FILE ###
 #filename = '/Users/Ashley/PycharmProjects/SIMple/Data/SLM-SIM_Tetraspeck200_680nm.tif'
 #filename = '/Users/Ashley/PycharmProjects/SIMple/Data/Zeiss_Actin_525nm_large.tif'
-filename = '/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/SIM_Week/Data/SLM-SIM_Tetraspeck200_680nm.tif'
+filename = '/Users/mattarnold/Masters/SIM_Week/Data/Zeiss_Actin_525nm_crop.tif'
 #filename = '/Users/Ashley/PycharmProjects/SIMple/Data/out.tiff'
 image_data = get_image(filename, 0)
 

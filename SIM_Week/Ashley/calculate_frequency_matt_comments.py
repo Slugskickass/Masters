@@ -26,7 +26,7 @@ def build_psf_otf(scale, size):
     [X, Y] = np.meshgrid(x, y)
 
     # Generate the PSF --FORGOTTEN WHAT THEY ARE DOING HERE! no gaussian model?
-    R = np.sqrt(np.minimum(X, np.abs(X - w)) ** 2 + np.minimum(Y, np.abs(Y - w)) ** 2)
+    R = np.sqrt(np.minimum(X, np.abs(X - size)) ** 2 + np.minimum(Y, np.abs(Y - size)) ** 2)
     yy = np.abs(2 * scipy.special.jv(1, scale * R + np.finfo(np.float32).resolution) / (scale * R + np.finfo(np.float32).resolution)) ** 2 # What does this do again?
     psf = fft.fftshift(yy)
 
@@ -126,8 +126,8 @@ def PhaseKai2opt(k_vector,noisy_original_image_fft, system_otf):
     noisy_image_freqadd = np.exp(-1j * 2 * np.pi * (k_vector[1] / t * (U - to)) + (k_vector[0] / t * (V - to))) * fft.ifft2(noisy_original_image_fft)
     noisy_image_freqadd_fft = fft.fft2(noisy_image_freqadd)
 
-    mA = np.longdouble(np.sum(noisy_original_image_fft * np.conj(noisy_image_freqadd_fft))) # Sum across pixels of product of image with complex conjugate with frequency introduced.
-    mA = mA / (np.longdouble(np.sum(noisy_image_freqadd_fft * np.conj(noisy_image_freqadd_fft)))) # Normalising cross-correlation term
+    mA = np.longlong(np.sum(noisy_original_image_fft * np.conj(noisy_image_freqadd_fft ))) # Sum across pixels of product of image with complex conjugate with frequency introduced.
+    mA = mA / np.longlong((np.sum(noisy_image_freqadd_fft * np.conj(noisy_image_freqadd_fft )))) # Normalising cross-correlation term
     #print(type(mA))
     #print(-np.abs(mA))
     correlation_FOM = -abs(mA) # Negative absolute value allows for minimisation; FOM = figure of merit
@@ -135,37 +135,42 @@ def PhaseKai2opt(k_vector,noisy_original_image_fft, system_otf):
     return(correlation_FOM)
 
 def x_optimise(k_vector,noisy_original_image_fft, system_otf):
-    number = 200
-    start = 290
-    stop = 310
-    correlation_FOM = np.zeros(number)
-    points = np.linspace(start, stop, number)
-    for index, I in enumerate(points):
-        k_vector[0] = I
-        correlation_FOM[index] = PhaseKai2opt(k_vector, noisy_original_image_fft, system_otf)
+#    number = 200
+#    start = 290
+#    stop = 310
+#    correlation_FOM = np.zeros(number)
+#    points = np.linspace(start, stop, number)
+#    for index, I in enumerate(points):
+#        k_vector[0] = I
+#        correlation_FOM[index] = PhaseKai2opt(k_vector, noisy_original_image_fft, system_otf)
 
     res = minimize(PhaseKai2opt, x0=k_vector, args=(noisy_original_image_fft, system_otf), method='Nelder-Mead', tol=0.00001)
-    return(res.x)
+    res_list = [(np.sqrt(res.x[0]**2 + res.x[1]**2)),(np.arctan2(-1*res.x[0], res.x[1]))]
+    return(res_list)
 
 def y_optimise(k_vector,noisy_original_image_fft, system_otf):
-    number = 200
-    start = 290
-    stop = 310
+#    number = 200
+#    start = 290
+#    stop = 310
     correlation_FOM = np.zeros(number)
-    points = np.linspace(start, stop, number)
-    for index, I in enumerate(points):
-        k_vector[1] = I
-        correlation_FOM[index] = PhaseKai2opt(k_vector, noisy_original_image_fft, system_otf)
+#    points = np.linspace(start, stop, number)
+#    for index, I in enumerate(points):
+#        k_vector[1] = I
+    correlation_FOM = PhaseKai2opt(k_vector, noisy_original_image_fft, system_otf)
 
     res = minimize(PhaseKai2opt, x0=k_vector, args=(noisy_original_image_fft, system_otf), method='Nelder-Mead', tol=0.00001)
-    return(res.x)
+    res_list = [(np.sqrt(res.x[0]**2 + res.x[1]**2)),(np.arctan2(-1*res.x[0], res.x[1]))]
+    return(res_list)
 
 if __name__ == "__main__":
     #File to process
-    filename = '/Users/mattarnold/Masters/SIM_Week/Data/Zeiss_Actin_525nm_crop.tif'
+    filename = '/Users/mattarnold/Masters/SIM_Week/Data/SLM-SIM_Tetraspeck200_680nm.tif'
     
     #Extract images
     image_data = get_image(filename, 0)
+    
+    plt.imshow(image_data)
+    plt.show
     
     #Define image parameters
     size = np.shape(image_data)[0]
@@ -184,8 +189,8 @@ if __name__ == "__main__":
     #print(np.arctan2(-1*k_vector[0], k_vector[1]))
     
     #Iterative minimisation for frequency in x and y
-    resx = x_optimise(k_vector,noisy_original_image_fft, system_otf)
-    resy = y_optimise(k_vector,noisy_original_image_fft, system_otf)
+    resx = x_optimise(ta,noisy_original_image_fft, system_otf)
+    resy = y_optimise(tb,noisy_original_image_fft, system_otf)
     
     print(resx)
     print(resy)
