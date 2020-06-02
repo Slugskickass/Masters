@@ -141,7 +141,7 @@ def PhaseKai2opt(k2fa,fS1aTnoisy, OTFo):
 scale = 0.99
 #filename = '/Users/Ashley/PycharmProjects/SIMple/Data/SLM-SIM_Tetraspeck200_680nm.tif'
 #filename = '/Users/Ashley/PycharmProjects/SIMple/Data/Zeiss_Actin_525nm_large.tif'
-filename = '/Users/mattarnold/Masters/SIM_Week/Data/Zeiss_Actin_525nm_crop.tif'
+filename = '/Users/RajSeehra/University/Masters/Semester 2/Git Upload Folder/SIM_Week/Data/Zeiss_Actin_525nm_crop.tif'
 #filename = '/Users/Ashley/PycharmProjects/SIMple/Data/out.tiff'
 image_data = get_image(filename, 0)
 w = np.shape(image_data)[0]
@@ -176,17 +176,17 @@ print(k2fa)
 print(np.sqrt(k2fa[0]**2 + k2fa[1]**2))
 print(np.arctan2(-1*k2fa[0], k2fa[1]))
 
-number = 200
-start = 290
-stop = 310
-CCop = np.zeros(number)
-points = np.linspace(start, stop, number)
-for index, I in enumerate(points):
-    print(I)
-    k2fa[0] = I
-    CCop[index] = PhaseKai2opt(k2fa, fS1aTnoisy, OTFo)
-plt.plot(CCop)
-plt.show()
+# number = 200
+# start = 290
+# stop = 310
+# CCop = np.zeros(number)
+# points = np.linspace(start, stop, number)
+# for index, I in enumerate(points):
+#     print(I)
+#     k2fa[0] = I
+#     CCop[index] = PhaseKai2opt(k2fa, fS1aTnoisy, OTFo)
+# plt.plot(CCop)
+# plt.show()
 
 res = minimize(PhaseKai2opt, x0=k2fa, args=(fS1aTnoisy, OTFo), method='Nelder-Mead', tol=0.00001)
 print(res.x)
