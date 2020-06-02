@@ -90,7 +90,7 @@ if __name__ == "__main__":
     parser.add_argument('-px', "-pixel", metavar='px', type=float ,required=True, help='raw camera pixel size (IN nanometres)')
     parser.add_argument('-m', "-mag", metavar='m', type=float ,required=True, help='the system magnification, in times')
     parser.add_argument('-qe', "-q", metavar='qe', type=float ,default=1,  help='the camera quantum efficiency')
-    parser.add_argument('-i', "-gt", "-input", metavar='i', type=str , default="xHTlB.jpg", help='ground truth image (optional)')
+    parser.add_argument('-i', "-gt", "-input", metavar='i', type=str , default="sample_ground_truth.jpg", help='ground truth image (optional)')
     parser.add_argument('-o', "-save", "-output", metavar='o', type=str , default="simulated_image.tif", help='save simulated image as (optional, include file type extension, e.g .tif; path can be included)')
     parser.add_argument('-n', '-noise', metavar='n', type=str, default=None, help='optional, saves image of noise added to camera pixels in simulation to specified file, define as for output image')
     args = parser.parse_args()
