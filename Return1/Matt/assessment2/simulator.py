@@ -24,7 +24,7 @@ def psf_simulator (NA, wavelength, pixel_size=5, frame_size=450):
     # Input: the raw camera pixel size (nm), magnification (x)
     # Output: the effective pixel size (nm)
 def cam_params(raw_px_size, mag):
-    effective_px_size = int(raw_px_size / mag)
+    effective_px_size = int(1000*raw_px_size / mag)
     return effective_px_size
 
 # NOISE: calculate a random noise component for each pixel
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Produce a simulation of diffraction and camera noise')
     parser.add_argument('-w', "-wavelength", "-lambda", metavar='w', type=float ,required=True, help='the fluorophore emission wavelngth')
     parser.add_argument('-na', "-NA", metavar='na', type=float ,required=True, help='the system numerical aperture')
-    parser.add_argument('-px', "-pixel", metavar='px', type=float ,required=True, help='raw camera pixel size (IN nanometres)')
+    parser.add_argument('-px', "-pixel", metavar='px', type=float ,required=True, help='raw camera pixel size (in microns)')
     parser.add_argument('-m', "-mag", metavar='m', type=float ,required=True, help='the system magnification, in times')
     parser.add_argument('-qe', "-q", metavar='qe', type=float ,default=1,  help='the camera quantum efficiency')
     parser.add_argument('-i', "-gt", "-input", metavar='i', type=str , default="sample_ground_truth.jpg", help='ground truth image (optional)')
@@ -105,8 +105,8 @@ if __name__ == "__main__":
     if args.na < 0 or args.na > 2:
         print("Numerical aperture entered:",args.na)
         raise ValueError("This NA is incorrect")
-    if args.px < 5000:
-        raise ValueError("Ensure the pixel size entered is in nanometres, pre-magnification")
+    if args.px < 4:
+        raise ValueError("Ensure the pixel size entered is in microns, pre-magnification")
     if args.qe >1:
         raise ValueError("Quantum efficiency must 1 or less")
     
