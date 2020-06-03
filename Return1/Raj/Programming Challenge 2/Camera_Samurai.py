@@ -4,6 +4,11 @@ import os
 import scipy
 
 
+# PSF generator: calculates the 2D PSF of a system.
+    # Takes the: numerical aperture of the system, the emission wavelength, the ground truth pixel size,
+    #           the return size for the PSF and a correction value if required.
+    # This is then adjusted and normalised to ensure the sum of the PSF is = 1 for convolution purposes.
+    # This instance of the function uses the values for FWHM to determine the sigma size.
 def psf_generator(NA, wavelength, pixel_size=100, frame_size=100, correction=1):
     # FWHM = np.sqrt(8*np.log(2)) * sigma
     sigma = (np.sqrt(8*np.log(2)) * wavelength / (2 * NA * correction)) / pixel_size
@@ -19,48 +24,34 @@ def psf_generator(NA, wavelength, pixel_size=100, frame_size=100, correction=1):
     return normalised_psf
 
 
-# single frame
+# single frame save function.
 def savetiff(file_name, data):
     images = Image.fromarray(data[:, :])
     images.save(file_name)
 
+# Takes the data inputs required for a ground truth and returns either the boring or interesting image as per user
+# request.
+def image_selector(type, groundpixel, photon_count, exposure_time):
+    ground_window = 10000 // groundpixel
 
-# single frame
-def image_open(file):
-    # open the file
-    file_name = file
-    img = Image.open(file_name)
-    # generate the array and apply the image data to it.
-    imgArray = np.zeros((img.size[1], img.size[0], img.n_frames), np.uint16)
-    imgArray[:, :, 0] = img
-    img.close()
+    if type == "Boring":
+        ground = np.zeros((ground_window, ground_window))
+        ground[1000:2000, 1000] = photon_count * exposure_time
+        return ground, ground_window
 
+    elif type == "Interesting":
+        # This is a fixed 2k x 2k image so the above values of ground_window hold no value only in that they match the
+        # image currently.
+        ground = np.load("ambiguous_image.npy")
+        ground = ground * photon_count * exposure_time
 
-# multi stack tiffs
-def loadtiffs(file_name):
-    img = Image.open(file_name)
-    #print('The Image is', img.size, 'Pixels.')
-    #print('With', img.n_frames, 'frames.')
-
-    imgArray = np.zeros((img.size[1], img.size[0], img.n_frames), np.float32)
-    for I in range(img.n_frames):
-        img.seek(I)
-        imgArray[:, :, I] = np.asarray(img)
-    img.close()
-    return (imgArray)
+        return ground, ground_window
 
 
-# as above
-def savetiffs(file_name, data):
-    images = []
-    for I in range(np.shape(data)[2]):
-        images.append(Image.fromarray(data[:, :, I]))
-        images[0].save(file_name, save_all=True, append_images=images[1:])
-
-
-def read_noise(y_data, read_mean, read_std):
-    # Build read noise.
+def read_noise(y_data, read_mean=2, read_std=2):
+    # Build read noise. Always positive so we take the absolute values.
     read_noise = np.random.normal(read_mean, read_std / np.sqrt(2), np.shape(y_data))
+    read_noise= np.abs(read_noise)
     return read_noise
 
 
