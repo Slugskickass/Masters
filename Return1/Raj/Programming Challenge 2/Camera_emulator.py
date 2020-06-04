@@ -111,4 +111,4 @@ camera_view = camera_view.astype(np.uint16)
 ### SAVE ###
 if SAVE == "Y":
     sam.savetiff("Camera_image.tif", camera_view)
- as sig
+
