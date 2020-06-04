@@ -22,6 +22,7 @@ layout = [  [sg.Text('Image Type (Boring or Interesting)', size=(30, 1)),sg.Spin
             [sg.Text('Preview?', size=(30, 1)), sg.Spin(("Y", "N"), initial_value="Y", size=(5, 1))],
             [sg.Text('Save?', size=(30, 1)), sg.Spin(("Y", "N"), initial_value="Y", size=(5, 1))],
             [sg.Text('Filename? (TIFF by default)', size=(30, 1)), sg.InputText("Camera_image")],
+            [sg.Text('Progress Bar', size=(30, 1)), sg.ProgressBar(100, bar_color=("blue", "white"), key="Progress Bar")],
             [sg.Button('Run'), sg.Button('Cancel')] ]
 
 # Creates the Window based on the layout.
@@ -31,6 +32,9 @@ while True:
     event, values = window.read()   # Reads the values entered into a list.
     if event in (None, 'Cancel'):   # if user closes window or clicks cancel
         break
+
+    # Define the progress bar to allow updates
+    progress_bar = window.FindElement('Progress Bar')
 
     ### INPUT PARAMETERS from values ###
     # GROUND TRUTH
@@ -55,6 +59,8 @@ while True:
     SAVE = values[14]  # Save parameter, input Y to save, other parameters will not save.
     filename = values[15]
 
+    progress_bar.UpdateBar(10)
+
 
     ### SAMPLE GENERATION ###
     # Make a Ground Truth
@@ -62,16 +68,21 @@ while True:
     ground, ground_window = sam.image_selector(image_type, groundpixel, photon_count, exposure_time)
     #### END AWESOME SAMPLE MAKER ####
     print("Sample Created!")
+    progress_bar.UpdateBar(20)
 
 
     ### LENS SIMULATOR ###
     # Lens == A diffraction limited blur. Dependent on wavelength and NA
     psf = sam.psf_generator(NA, wavelength, groundpixel, ground_window)
     print("PSF made")
+    progress_bar.UpdateBar(30)
 
     # Apply the lens as a convolution of the two arrays producing a diffraction limited image.
     dif_lim = sig.fftconvolve(ground, psf, "same")  # Fiddling with fourier space to convolute, much faster.
     print("Convolution in progress")
+    progress_bar.UpdateBar(40)
+
+
     ### CAMERA SETUP ###
     # Camera sensor, based on optical magnification and pixel size.
     camerapixel_per_groundpixel = camera_pixel_size / groundpixel
@@ -79,6 +90,7 @@ while True:
     # Used to determine the number of the ground pixels that exist within each bin
     mag_ratio = camerapixel_per_groundpixel / magnification
     print("Overall Image Binning (ground pixels per bin):", mag_ratio, "by", mag_ratio)
+    progress_bar.UpdateBar(50)
 
 
     ### IMAGING TIME ###
@@ -94,15 +106,19 @@ while True:
                             x * int(mag_ratio):x * int(mag_ratio) + int(mag_ratio)]
             camera_image[y, x] = np.mean(pixel_section)  # Take the mean value of the section and bin it to the camera.
     print("Collecting Data")
+    progress_bar.UpdateBar(60)
 
     # Account for Quantum efficiency.
     camera_image = camera_image * QE
     print("QE step")
+    progress_bar.UpdateBar(70)
 
 
     ### ADD NOISE ###
     # Add read and shot noise.
     print("That pesky noise...")
+    progress_bar.UpdateBar(80)
+
     camera_Rnoise = sam.read_noise(camera_image, read_mean, read_std)
     camera_Snoise = sam.shot_noise(np.sqrt(photon_count * exposure_time), camera_image)
 
@@ -123,6 +139,7 @@ while True:
     # Multiply by gain to convert from successful incidence photons and noise to electrons.
     camera_gain = camera_all_noise * gain
     print("All about them gains.")
+    progress_bar.UpdateBar(90)
 
     # 100 count added as this is what camera's do.
     camera_view = camera_gain + 100
@@ -131,6 +148,7 @@ while True:
     # Conversion to: USER INT VALUE 16
     camera_view = camera_view.astype(np.uint16)
     print("Complete")
+    progress_bar.UpdateBar(100)
 
 
     ### PREVIEW ###
@@ -146,4 +164,4 @@ while True:
 
 window.close()
 
-# Look at sg.Graph, sg.ProgressBar
+# Look at sg.ProgressBar
