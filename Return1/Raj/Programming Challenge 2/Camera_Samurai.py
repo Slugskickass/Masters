@@ -36,7 +36,7 @@ def image_selector(type, groundpixel, photon_count, exposure_time):
 
     if type == "Boring":
         ground = np.zeros((ground_window, ground_window))
-        ground[1000:2000, 1000] = photon_count * exposure_time
+        ground[1000:2000, 950:1050] = photon_count * exposure_time
         return ground, ground_window
 
     elif type == "Interesting":

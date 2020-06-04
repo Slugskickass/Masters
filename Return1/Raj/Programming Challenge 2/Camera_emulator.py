@@ -1,10 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import Camera_Samurai as sam
-from scipy import signal as sig
+from scipy import signal
 
 ### INPUT PARAMETERS ###
-# GROUND
+# GROUND TRUTH
 image_type = "Interesting"           # Ground truth image if you want user input. Choose: "Boring", "Interesting"
 groundpixel = 5                 # Pixel size e.g. pixels = 5nm
 photon_count = 10               # Photon count value per unit time (same unit used in exposure)
@@ -111,3 +111,4 @@ camera_view = camera_view.astype(np.uint16)
 ### SAVE ###
 if SAVE == "Y":
     sam.savetiff("Camera_image.tif", camera_view)
+ as sig
