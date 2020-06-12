@@ -49,7 +49,7 @@ while True:
     camera_pixel_size = int(values[6])  # Camera pixel size in nanometres. usual sizes = 6 microns or 11 microns
     magnification = int(values[7])  # Lens magnification
     QE = float(values[8])  # Quantum Efficiency
-    gain = int(values[9])  # Camera gain. Usually 2 per incidence photon
+    gain = float(values[9])  # Camera gain. Usually 2 per incidence photon
     # NOISE
     read_mean = float(values[10])  # Read noise mean level
     read_std = float(values[11])  # Read noise standard deviation level

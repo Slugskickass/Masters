@@ -50,7 +50,7 @@ ground, ground_window = sam.image_selector(image_type, groundpixel, photon_count
 psf = sam.psf_generator(NA, wavelength, groundpixel, ground_window)
 
 # Apply the lens as a convolution of the two arrays producing a diffraction limited image.
-dif_lim = sig.fftconvolve(ground, psf, "same")            # Fiddling with fourier space to convolute, much faster.
+dif_lim = signal.fftconvolve(ground, psf, "same")            # Fiddling with fourier space to convolute, much faster.
 
 
 ### CAMERA SETUP ###
